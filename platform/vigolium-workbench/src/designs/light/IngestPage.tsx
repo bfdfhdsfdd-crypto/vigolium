@@ -7,11 +7,11 @@ import PageShell from './PageShell';
 
 const INPUT_MODES = [
   { value: 'url', label: 'URL' },
-  { value: 'url_file', label: 'URL_FILE' },
-  { value: 'curl', label: 'CURL' },
-  { value: 'burp_base64', label: 'BURP_BASE64' },
-  { value: 'openapi', label: 'OPENAPI' },
-  { value: 'postman_collection', label: 'POSTMAN' },
+  { value: 'url_file', label: 'URL 文件' },
+  { value: 'curl', label: 'curl 请求' },
+  { value: 'burp_base64', label: 'Burp Base64' },
+  { value: 'openapi', label: 'OpenAPI 规范' },
+  { value: 'postman_collection', label: 'Postman 集合' },
 ];
 
 export default function IngestPage() {
@@ -43,12 +43,12 @@ export default function IngestPage() {
     <PageShell>
       <div className="border border-[#bbc3c4] bg-[#f6edda] overflow-hidden">
         <div className="px-3 py-1.5 border-b border-[#bbc3c4]">
-          <span className="text-[#0078c8] text-xs font-bold">INGEST_HTTP</span>
+          <span className="text-[#0078c8] text-xs font-bold">HTTP 流量导入</span>
         </div>
 
         <div className="p-3 space-y-3">
           <div>
-            <label className="text-[#708e8e] text-[10px] uppercase block mb-1">INPUT_MODE</label>
+            <label className="text-[#708e8e] text-[10px] uppercase block mb-1">输入模式</label>
             <div className="flex gap-1 flex-wrap">
               {INPUT_MODES.map((mode) => (
                 <button
@@ -68,7 +68,7 @@ export default function IngestPage() {
 
           {inputMode === 'url' && (
             <div>
-              <label className="text-[#708e8e] text-[10px] uppercase block mb-1">URL</label>
+              <label className="text-[#708e8e] text-[10px] uppercase block mb-1">网址</label>
               <input
                 type="text"
                 value={url}
@@ -81,7 +81,7 @@ export default function IngestPage() {
 
           {(inputMode === 'url_file' || inputMode === 'curl' || inputMode === 'openapi' || inputMode === 'postman_collection') && (
             <div>
-              <label className="text-[#708e8e] text-[10px] uppercase block mb-1">CONTENT</label>
+              <label className="text-[#708e8e] text-[10px] uppercase block mb-1">内容</label>
               <textarea
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
@@ -99,22 +99,22 @@ export default function IngestPage() {
           {inputMode === 'burp_base64' && (
             <div className="space-y-2">
               <div>
-                <label className="text-[#708e8e] text-[10px] uppercase block mb-1">HTTP_REQUEST_BASE64</label>
+                <label className="text-[#708e8e] text-[10px] uppercase block mb-1">HTTP 请求（Base64）</label>
                 <textarea
                   value={httpRequestBase64}
                   onChange={(e) => setHttpRequestBase64(e.target.value)}
                   rows={4}
-                  placeholder="Base64-encoded HTTP request..."
+                  placeholder="Base64 编码的 HTTP 请求..."
                   className={textareaClass}
                 />
               </div>
               <div>
-                <label className="text-[#708e8e] text-[10px] uppercase block mb-1">HTTP_RESPONSE_BASE64</label>
+                <label className="text-[#708e8e] text-[10px] uppercase block mb-1">HTTP 响应（Base64）</label>
                 <textarea
                   value={httpResponseBase64}
                   onChange={(e) => setHttpResponseBase64(e.target.value)}
                   rows={4}
-                  placeholder="Base64-encoded HTTP response..."
+                  placeholder="Base64 编码的 HTTP 响应..."
                   className={textareaClass}
                 />
               </div>
@@ -122,12 +122,12 @@ export default function IngestPage() {
           )}
 
           <div>
-            <label className="text-[#708e8e] text-[10px] uppercase block mb-1">CONTENT_BASE64 (optional)</label>
+            <label className="text-[#708e8e] text-[10px] uppercase block mb-1">内容（Base64，可选）</label>
             <textarea
               value={contentBase64}
               onChange={(e) => setContentBase64(e.target.value)}
               rows={3}
-              placeholder="Optional base64 content..."
+              placeholder="可选的 Base64 内容..."
               className={textareaClass}
             />
           </div>
@@ -142,11 +142,11 @@ export default function IngestPage() {
 
           {ingest.isSuccess && ingest.data && (
             <div className="border border-[#bbc3c4] p-2 text-xs space-y-0.5">
-              <div className="text-[#0078c8] font-bold">RESULT</div>
-              <div><span className="text-[#708e8e]">imported:</span> <span className="text-[#005661]">{ingest.data.imported}</span></div>
-              <div><span className="text-[#708e8e]">skipped:</span> <span className="text-[#005661]">{ingest.data.skipped}</span></div>
-              <div><span className="text-[#708e8e]">errors:</span> <span className={ingest.data.errors > 0 ? 'text-[#e34e1c]' : 'text-[#005661]'}>{ingest.data.errors}</span></div>
-              <div><span className="text-[#708e8e]">message:</span> <span className="text-[#005661]">{ingest.data.message}</span></div>
+              <div className="text-[#0078c8] font-bold">结果</div>
+              <div><span className="text-[#708e8e]">已导入：</span> <span className="text-[#005661]">{ingest.data.imported}</span></div>
+              <div><span className="text-[#708e8e]">已跳过：</span> <span className="text-[#005661]">{ingest.data.skipped}</span></div>
+              <div><span className="text-[#708e8e]">错误数：</span> <span className={ingest.data.errors > 0 ? 'text-[#e34e1c]' : 'text-[#005661]'}>{ingest.data.errors}</span></div>
+              <div><span className="text-[#708e8e]">消息：</span> <span className="text-[#005661]">{ingest.data.message}</span></div>
             </div>
           )}
 

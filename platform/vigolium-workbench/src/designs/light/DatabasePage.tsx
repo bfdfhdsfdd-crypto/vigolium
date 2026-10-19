@@ -126,11 +126,11 @@ function RecordDetailPanel({
       <div className="px-3 py-1.5 border-b flex items-center justify-between shrink-0" style={{ borderColor: 'var(--v-border)' }}>
         <div className="flex items-center gap-2 min-w-0">
           <span className="text-xs font-bold truncate" style={{ color: 'var(--v-accent)' }}>RECORD {recordId}</span>
-          <button onClick={copyJson} title="Copy JSON" style={{ color: 'var(--v-text-muted)' }}>
+          <button onClick={copyJson} title="复制 JSON" style={{ color: 'var(--v-text-muted)' }}>
             {copied ? <Check className="w-3 h-3" style={{ color: 'var(--v-success)' }} /> : <Copy className="w-3 h-3" />}
           </button>
         </div>
-        <button onClick={onClose} style={{ color: 'var(--v-text-muted)' }} title="Close">
+        <button onClick={onClose} style={{ color: 'var(--v-text-muted)' }} title="关闭">
           <X className="w-4 h-4" />
         </button>
       </div>
@@ -155,9 +155,9 @@ function RecordDetailPanel({
       {/* Content */}
       <div className="flex-1 overflow-y-auto">
         {isLoading ? (
-          <div className="px-3 py-4 text-xs" style={{ color: 'var(--v-text-muted)' }}>loading...</div>
+          <div className="px-3 py-4 text-xs" style={{ color: 'var(--v-text-muted)' }}>加载中...</div>
         ) : !record ? (
-          <div className="px-3 py-4 text-xs" style={{ color: 'var(--v-text-muted)' }}>record not found</div>
+          <div className="px-3 py-4 text-xs" style={{ color: 'var(--v-text-muted)' }}>未找到记录</div>
         ) : tab === 'fields' ? (
           <div className="divide-y" style={{ borderColor: 'var(--v-border)' }}>
             {(columns.length > 0 ? columns.map(c => c.name) : Object.keys(record)).map((col) => {
@@ -316,8 +316,8 @@ export default function DatabasePage() {
       return;
     }
     updateRecord.mutate({ table: selectedTable, id: editingRecord.id, data: changes }, {
-      onSuccess: () => { toast('record updated', 'success'); setEditingRecord(null); refetchRecords(); },
-      onError: (e) => toast(`error: ${e.message}`, 'error'),
+      onSuccess: () => { toast('记录已更新', 'success'); setEditingRecord(null); refetchRecords(); },
+      onError: (e) => toast(`操作失败：${e.message}`, 'error'),
     });
   };
 
@@ -325,12 +325,12 @@ export default function DatabasePage() {
     if (!selectedTable) return;
     deleteRecord.mutate({ table: selectedTable, id }, {
       onSuccess: () => {
-        toast('record deleted', 'success');
+        toast('记录已删除', 'success');
         setDeleteConfirm(null);
         if (selectedRecordId === id) setSelectedRecordId(null);
         refetchRecords();
       },
-      onError: (e) => toast(`error: ${e.message}`, 'error'),
+      onError: (e) => toast(`操作失败：${e.message}`, 'error'),
     });
   };
 
@@ -341,8 +341,8 @@ export default function DatabasePage() {
       if (val !== '') data[key] = val;
     }
     createRecord.mutate({ table: selectedTable, data }, {
-      onSuccess: () => { toast('record created', 'success'); setShowCreateModal(false); setCreateValues({}); refetchRecords(); },
-      onError: (e) => toast(`error: ${e.message}`, 'error'),
+      onSuccess: () => { toast('记录已创建', 'success'); setShowCreateModal(false); setCreateValues({}); refetchRecords(); },
+      onError: (e) => toast(`操作失败：${e.message}`, 'error'),
     });
   };
 
@@ -386,12 +386,12 @@ export default function DatabasePage() {
             {!sidebarCollapsed && (
               <div className="flex items-center gap-1.5">
                 <Database className="w-3 h-3" style={{ color: 'var(--v-accent)' }} />
-                <span className="text-xs font-bold" style={{ color: 'var(--v-accent)' }}>TABLES</span>
+                <span className="text-xs font-bold" style={{ color: 'var(--v-accent)' }}>数据表</span>
               </div>
             )}
             <div className="flex items-center gap-1">
               {!sidebarCollapsed && (
-                <button onClick={() => refetchTables()} style={{ color: 'var(--v-text-muted)' }} title="Refresh">
+                <button onClick={() => refetchTables()} style={{ color: 'var(--v-text-muted)' }} title="刷新">
                   <RefreshCw className={`w-3 h-3 ${fetchingTables ? 'animate-spin' : ''}`} />
                 </button>
               )}
@@ -402,7 +402,7 @@ export default function DatabasePage() {
           </div>
           {sidebarCollapsed ? (
             <div className="flex flex-col items-center pt-2 gap-1">
-              <button onClick={() => setSidebarCollapsed(false)} title="Show tables" style={{ color: 'var(--v-accent)' }}>
+              <button onClick={() => setSidebarCollapsed(false)} title="显示数据表" style={{ color: 'var(--v-accent)' }}>
                 <Database className="w-3.5 h-3.5" />
               </button>
               <span className="text-[9px]" style={{ color: 'var(--v-text-muted)' }}>{tablesData?.total ?? 0}</span>
@@ -438,7 +438,7 @@ export default function DatabasePage() {
                     </button>
                   ))}
                   {tablesData.tables.length === 0 && (
-                    <div className="px-3 py-4 text-xs" style={{ color: 'var(--v-text-muted)' }}>no tables</div>
+                    <div className="px-3 py-4 text-xs" style={{ color: 'var(--v-text-muted)' }}>暂无数据表</div>
                   )}
                 </>
               )}
@@ -454,7 +454,7 @@ export default function DatabasePage() {
               <div className="flex-1 flex items-center justify-center">
                 <div className="text-center">
                   <Database className="w-8 h-8 mx-auto mb-2" style={{ color: 'var(--v-border)' }} />
-                  <p className="text-xs" style={{ color: 'var(--v-text-muted)' }}>select a table to browse records</p>
+                  <p className="text-xs" style={{ color: 'var(--v-text-muted)' }}>选择数据表以浏览记录</p>
                 </div>
               </div>
             ) : (
@@ -464,7 +464,7 @@ export default function DatabasePage() {
                   <div className="flex items-center gap-2">
                     <span className="text-xs font-bold" style={{ color: 'var(--v-accent)' }}>{selectedTable}</span>
                     <span className="text-[10px]" style={{ color: 'var(--v-text-muted)' }}>{totalRecords.toLocaleString()} rows</span>
-                    <button onClick={() => refetchRecords()} style={{ color: 'var(--v-text-muted)' }} title="Refresh">
+                    <button onClick={() => refetchRecords()} style={{ color: 'var(--v-text-muted)' }} title="刷新">
                       <RefreshCw className={`w-3 h-3 ${fetchingRecords ? 'animate-spin' : ''}`} />
                     </button>
                   </div>
@@ -477,7 +477,7 @@ export default function DatabasePage() {
                         value={searchInput}
                         onChange={(e) => setSearchInput(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-                        placeholder="search..."
+                        placeholder="搜索..."
                         className="bg-transparent text-xs px-1.5 py-0.5 w-40 focus:outline-none"
                         style={{ color: 'var(--v-text)' }}
                       />
@@ -502,7 +502,7 @@ export default function DatabasePage() {
                       {showColumnChooser && (
                         <div className="absolute right-0 top-full mt-1 z-50 border p-2 w-56 max-h-80 overflow-y-auto" style={{ backgroundColor: 'var(--v-surface)', borderColor: 'var(--v-border)' }}>
                           <div className="flex items-center justify-between mb-1">
-                            <span className="text-[10px] font-bold" style={{ color: 'var(--v-accent)' }}>Visible Columns</span>
+                            <span className="text-[10px] font-bold" style={{ color: 'var(--v-accent)' }}>显示列</span>
                             <button onClick={() => setHiddenColumns(new Set())} className="text-[10px]" style={{ color: 'var(--v-text-muted)' }}>[all]</button>
                           </div>
                           {allColumns.map(col => (
@@ -596,16 +596,16 @@ export default function DatabasePage() {
                                   </>
                                 ) : (
                                   <>
-                                    <button onClick={() => startEdit(record)} style={{ color: 'var(--v-text-muted)' }} title="Edit">
+                                    <button onClick={() => startEdit(record)} style={{ color: 'var(--v-text-muted)' }} title="编辑">
                                       <Pencil className="w-3 h-3" />
                                     </button>
                                     {deleteConfirm === pkVal ? (
                                       <>
-                                        <button onClick={() => handleDelete(pkVal)} className="text-[10px]" style={{ color: 'var(--v-error)' }}>[yes]</button>
-                                        <button onClick={() => setDeleteConfirm(null)} className="text-[10px]" style={{ color: 'var(--v-text-muted)' }}>[no]</button>
+                                        <button onClick={() => handleDelete(pkVal)} className="text-[10px]" style={{ color: 'var(--v-error)' }}>[是]</button>
+                                        <button onClick={() => setDeleteConfirm(null)} className="text-[10px]" style={{ color: 'var(--v-text-muted)' }}>[否]</button>
                                       </>
                                     ) : (
-                                      <button onClick={() => setDeleteConfirm(pkVal)} style={{ color: 'var(--v-text-muted)' }} title="Delete">
+                                      <button onClick={() => setDeleteConfirm(pkVal)} style={{ color: 'var(--v-text-muted)' }} title="删除">
                                         <Trash2 className="w-3 h-3" />
                                       </button>
                                     )}
@@ -625,7 +625,7 @@ export default function DatabasePage() {
                                   />
                                 ) : (
                                   <span className="truncate block" style={{ color: primaryKey.includes(col) ? 'var(--v-accent)' : 'var(--v-text)' }}>
-                                    {record[col] !== null && record[col] !== undefined ? String(record[col]) : <span style={{ color: 'var(--v-border)' }}>null</span>}
+                                    {record[col] !== null && record[col] !== undefined ? String(record[col]) : <span style={{ color: 'var(--v-border)' }}>空值</span>}
                                   </span>
                                 )}
                               </td>

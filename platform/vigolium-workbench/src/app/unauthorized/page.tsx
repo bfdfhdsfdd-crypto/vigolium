@@ -20,14 +20,14 @@ export default function UnauthorizedPage() {
         className="text-lg font-bold mb-3"
         style={{ color: isDark ? '#e06c75' : '#dc3545' }}
       >
-        Access Denied
+        访问被拒绝
       </h1>
       <p
         className="text-sm text-center max-w-md mb-6 leading-relaxed"
         style={{ color: isDark ? '#918175' : '#6c757d' }}
       >
-        Your account is not associated with any organization.
-        Please contact your administrator for an invitation.
+        你的账户尚未关联任何组织。
+        请联系管理员获取邀请。
       </p>
       <div className="flex gap-4">
         <a
@@ -38,7 +38,7 @@ export default function UnauthorizedPage() {
             color: isDark ? '#918175' : '#6c757d',
           }}
         >
-          Sign out
+          退出登录
         </a>
         <button
           onClick={() => window.location.href = '/'}
@@ -48,7 +48,7 @@ export default function UnauthorizedPage() {
             color: isDark ? '#7fd962' : '#2e8b57',
           }}
         >
-          Try again
+          重试
         </button>
       </div>
     </div>

@@ -118,25 +118,25 @@ export default function ExtensionDetailPanel({ fileName, onClose }: Props) {
       </div>
 
       {isLoading && (
-        <div className="p-3 text-xs text-[#708e8e]">loading...</div>
+        <div className="p-3 text-xs text-[#708e8e]">加载中...</div>
       )}
 
       {isError && (
-        <div className="p-3 text-xs text-[#e34e1c]">failed to load extension</div>
+        <div className="p-3 text-xs text-[#e34e1c]">加载扩展失败</div>
       )}
 
       {ext && (
         <>
           {/* Metadata - compact single line */}
           <div className="px-3 py-1.5 text-xs text-[#708e8e] shrink-0 border-b border-[#bbc3c4] flex flex-wrap items-center gap-x-3 gap-y-0.5">
-            <span>id: <span className="text-[#005661]">{ext.id}</span></span>
-            <span>name: <span className="text-[#005661]">{ext.name}</span></span>
-            <span>lang: <span className="text-[#005661]">{ext.language}</span></span>
-            <span>type: <span className={ext.type === 'active' ? 'text-[#0078c8] font-bold' : 'text-[#f49725] font-bold'}>{ext.type}</span></span>
-            <span>severity: <span className="font-bold" style={{ color: SEVERITY_COLORS[ext.severity] || '#708e8e' }}>{ext.severity}</span></span>
-            {ext.confidence && <span>confidence: <span className="font-bold" style={{ color: CONFIDENCE_COLORS[ext.confidence] || '#708e8e' }}>{ext.confidence}</span></span>}
+            <span>ID：<span className="text-[#005661]">{ext.id}</span></span>
+            <span>名称：<span className="text-[#005661]">{ext.name}</span></span>
+            <span>语言：<span className="text-[#005661]">{ext.language}</span></span>
+            <span>类型：<span className={ext.type === 'active' ? 'text-[#0078c8] font-bold' : 'text-[#f49725] font-bold'}>{ext.type}</span></span>
+            <span>严重性：<span className="font-bold" style={{ color: SEVERITY_COLORS[ext.severity] || '#708e8e' }}>{ext.severity}</span></span>
+            {ext.confidence && <span>置信度：<span className="font-bold" style={{ color: CONFIDENCE_COLORS[ext.confidence] || '#708e8e' }}>{ext.confidence}</span></span>}
             {ext.scan_types && ext.scan_types.length > 0 && (
-              <span>scans: <span className="text-[#005661]">{ext.scan_types.join(', ')}</span></span>
+              <span>扫描类型：<span className="text-[#005661]">{ext.scan_types.join(', ')}</span></span>
             )}
             {ext.tags && ext.tags.length > 0 && (
               <span className="flex items-center gap-1">tags: {ext.tags.map((tag) => (
@@ -144,7 +144,7 @@ export default function ExtensionDetailPanel({ fileName, onClose }: Props) {
               ))}</span>
             )}
             {ext.description && (
-              <span>desc: <span className="text-[#005661]">{ext.description}</span></span>
+              <span>说明：<span className="text-[#005661]">{ext.description}</span></span>
             )}
           </div>
 

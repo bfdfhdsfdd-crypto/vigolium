@@ -36,7 +36,7 @@ export default function ScanStatus({
   if (loading) {
     return (
       <div className="border border-[#2e2b26] bg-[#1c1b19] p-3 h-full">
-        <div className="text-[#7fd962] text-xs font-bold mb-2">SCAN CONTROL</div>
+        <div className="text-[#7fd962] text-xs font-bold mb-2">扫描控制</div>
         <div className="space-y-1.5">
           <div className="grid grid-cols-2 gap-x-4 gap-y-1">
             <span className="v-skeleton h-3 w-32" />
@@ -57,20 +57,20 @@ export default function ScanStatus({
 
   return (
     <div className="border border-[#2e2b26] bg-[#1c1b19] p-3 v-fade-in h-full">
-      <div className="text-[#7fd962] text-xs font-bold mb-2">SCAN CONTROL</div>
+      <div className="text-[#7fd962] text-xs font-bold mb-2">扫描控制</div>
       <div className="text-xs space-y-2">
         {running && (
           <>
             <div className="flex items-center gap-2">
-              <span className="text-[#918175]">STATUS:</span>
-              <span className="text-[#98bc37]">SCANNING...</span>
+              <span className="text-[#918175]">状态：</span>
+              <span className="text-[#98bc37]">扫描中...</span>
             </div>
             {scanStatus?.message && (
               <div className="text-[#918175] text-[11px] truncate">{scanStatus.message}</div>
             )}
             {scanStatus?.scan_uuid && (
               <div className="flex items-center gap-2">
-                <span className="text-[#918175]">SCAN_ID:</span>
+                <span className="text-[#918175]">扫描 ID：</span>
                 <span className="text-[#baa67f] truncate">{scanStatus.scan_uuid}</span>
               </div>
             )}
@@ -81,10 +81,10 @@ export default function ScanStatus({
         {stats && (
           <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[#918175]">
             {active && (
-              <div>Active Modules: <span className="text-[#fce8c3]">{active.enabled}/{active.total}</span></div>
+              <div>主动模块：<span className="text-[#fce8c3]">{active.enabled}/{active.total}</span></div>
             )}
             {passive && (
-              <div>Passive Modules: <span className="text-[#fce8c3]">{passive.enabled}/{passive.total}</span></div>
+              <div>被动模块：<span className="text-[#fce8c3]">{passive.enabled}/{passive.total}</span></div>
             )}
           </div>
         )}
@@ -93,10 +93,10 @@ export default function ScanStatus({
         {(scanCounts || oastTotal !== undefined) && (
           <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[#918175]">
             {scanCounts && (
-              <div>Scans: running: <span className="text-[#98bc37]">{scanCounts['running'] || 0}</span> completed: <span className="text-[#fce8c3]">{scanCounts['completed'] || 0}</span> failed: <span className="text-[#ef2f27]">{scanCounts['failed'] || 0}</span></div>
+              <div>扫描数：运行中 <span className="text-[#98bc37]">{scanCounts['running'] || 0}</span> 已完成 <span className="text-[#fce8c3]">{scanCounts['completed'] || 0}</span> 失败 <span className="text-[#ef2f27]">{scanCounts['failed'] || 0}</span></div>
             )}
             {oastTotal !== undefined && (
-              <div>OAST: <span className="text-[#fce8c3]">{oastTotal}</span></div>
+              <div>OAST 交互：<span className="text-[#fce8c3]">{oastTotal}</span></div>
             )}
           </div>
         )}

@@ -83,7 +83,7 @@ export default function AuthGate({ children }: AuthGateProps) {
     if (authTab === 'api_key') {
       const apiKey = apiKeyInput.trim();
       if (!apiKey) {
-        setError('api_key is required');
+        setError('请输入 API 密钥');
         return;
       }
 
@@ -95,7 +95,7 @@ export default function AuthGate({ children }: AuthGateProps) {
         });
         if (!res.ok) {
           await settle();
-          setError('invalid api key');
+          setError('API 密钥无效');
           return;
         }
         setToken(apiKey);
@@ -104,7 +104,7 @@ export default function AuthGate({ children }: AuthGateProps) {
         setState('ready');
       } catch {
         await settle();
-        setError('cannot connect to server');
+        setError('无法连接到服务器');
       } finally {
         setLoading(false);
       }
@@ -113,7 +113,7 @@ export default function AuthGate({ children }: AuthGateProps) {
       const accessCode = accessCodeInput.trim();
 
       if (!username || !accessCode) {
-        setError('username and access_code are required');
+        setError('请输入用户名和访问码');
         return;
       }
 
@@ -129,7 +129,7 @@ export default function AuthGate({ children }: AuthGateProps) {
         if (err instanceof Error) {
           setError(err.message);
         } else {
-          setError('cannot connect to server');
+          setError('无法连接到服务器');
         }
       } finally {
         setLoading(false);
@@ -150,7 +150,7 @@ export default function AuthGate({ children }: AuthGateProps) {
       <div className="min-h-screen flex items-center justify-center bg-[var(--v-bg)] font-mono">
         <div className="flex items-center gap-2 text-[var(--v-text-muted)] text-sm">
           <span className="text-[var(--v-accent)] animate-pulse">&#9608;</span>
-          <span>connecting...</span>
+          <span>正在连接...</span>
         </div>
       </div>
     );
@@ -185,8 +185,8 @@ export default function AuthGate({ children }: AuthGateProps) {
         <div className="login-shell-fade-in flex flex-col items-center w-full">
           {/* Animated Kraken Orb logo */}
           <KrakenOrb size={300} className="mb-6" />
-          <h1 className="text-sky-400 text-xl font-bold mb-3 text-center">Vigolium Workbench</h1>
-          <p className="text-sm leading-relaxed mb-6 text-center max-w-xl" style={{ color: 'var(--v-text-muted)' }}>High-fidelity vulnerability scanner fusing agentic AI with native speed, modularity, and precision.</p>
+          <h1 className="text-sky-400 text-xl font-bold mb-3 text-center">Vigolium 工作台</h1>
+          <p className="text-sm leading-relaxed mb-6 text-center max-w-xl" style={{ color: 'var(--v-text-muted)' }}>融合智能代理 AI 与原生扫描速度、模块化能力和精准检测的高保真漏洞扫描器。</p>
 
           <div
             className="w-full max-w-md border text-center"
@@ -202,7 +202,7 @@ export default function AuthGate({ children }: AuthGateProps) {
                   ? { color: 'var(--v-accent)', borderBottomColor: 'var(--v-accent)' }
                   : { color: 'var(--v-text-muted)' }}
               >
-                API KEY
+                API 密钥
               </button>
               <button
                 type="button"
@@ -212,7 +212,7 @@ export default function AuthGate({ children }: AuthGateProps) {
                   ? { color: 'var(--v-accent)', borderBottomColor: 'var(--v-accent)' }
                   : { color: 'var(--v-text-muted)' }}
               >
-                CREDENTIALS
+               账号登录
               </button>
             </div>
 
@@ -220,7 +220,7 @@ export default function AuthGate({ children }: AuthGateProps) {
               <form onSubmit={handleSubmit} className="space-y-2">
                 {authTab === 'api_key' ? (
                   <>
-                    <p className="text-xs mb-3 text-center" style={{ color: 'var(--v-text-muted)' }}>Authenticate with your Vigolium API key</p>
+                    <p className="text-xs mb-3 text-center" style={{ color: 'var(--v-text-muted)' }}>使用 Vigolium API 密钥进行身份验证</p>
                     <div className="relative">
                       <KeyRound className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: 'var(--v-text-muted)' }} />
                       <input
@@ -238,7 +238,7 @@ export default function AuthGate({ children }: AuthGateProps) {
                         className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px]"
                         style={{ color: 'var(--v-text-muted)' }}
                       >
-                        [{showApiKey ? 'hide' : 'show'}]
+                        [{showApiKey ? '隐藏' : '显示'}]
                       </button>
                     </div>
                     <button
@@ -251,22 +251,22 @@ export default function AuthGate({ children }: AuthGateProps) {
                       }}
                     >
                       <span className="flex items-center justify-between text-[10px]" style={{ color: 'var(--v-text-muted)' }}>
-                        <span>run this to view your api key:</span>
-                        <span style={{ color: copied ? 'var(--v-accent)' : 'var(--v-text-muted)' }}>{copied ? 'copied!' : 'click to copy'}</span>
+                        <span>运行以下命令查看 API 密钥：</span>
+                        <span style={{ color: copied ? 'var(--v-accent)' : 'var(--v-text-muted)' }}>{copied ? '已复制！' : '点击复制'}</span>
                       </span>
                       <code className="block text-xs mt-1 font-semibold" style={{ color: 'var(--v-accent)' }}>$ vigolium config view server.auth_api_key --force</code>
                     </button>
                   </>
                 ) : (
                   <>
-                    <p className="text-xs mb-3 text-center" style={{ color: 'var(--v-text-muted)' }}>Sign in with your username and access code</p>
+                    <p className="text-xs mb-3 text-center" style={{ color: 'var(--v-text-muted)' }}>使用用户名和访问码登录</p>
                     <div className="relative">
                       <User className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5" style={{ color: 'var(--v-text-muted)' }} />
                       <input
                         type="text"
                         value={usernameInput}
                         onChange={(e) => setUsernameInput(e.target.value)}
-                        placeholder="username"
+                        placeholder="用户名"
                         autoComplete="username"
                         className="w-full border text-xs pl-8 pr-3 py-2.5 focus:outline-none bg-transparent"
                         style={{ borderColor: 'var(--v-border)', color: 'var(--v-text)' }}
@@ -278,7 +278,7 @@ export default function AuthGate({ children }: AuthGateProps) {
                         type={showAccessCode ? 'text' : 'password'}
                         value={accessCodeInput}
                         onChange={(e) => setAccessCodeInput(e.target.value)}
-                        placeholder="access code"
+                        placeholder="访问码"
                         autoComplete="current-password"
                         className="w-full border text-xs pl-8 pr-14 py-2.5 focus:outline-none bg-transparent"
                         style={{ borderColor: 'var(--v-border)', color: 'var(--v-text)' }}
@@ -289,7 +289,7 @@ export default function AuthGate({ children }: AuthGateProps) {
                         className="absolute right-2 top-1/2 -translate-y-1/2 text-[10px]"
                         style={{ color: 'var(--v-text-muted)' }}
                       >
-                        [{showAccessCode ? 'hide' : 'show'}]
+                        [{showAccessCode ? '隐藏' : '显示'}]
                       </button>
                     </div>
                   </>
@@ -304,12 +304,12 @@ export default function AuthGate({ children }: AuthGateProps) {
                   {loading ? (
                     <>
                       <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>authenticating...</span>
+                      <span>正在验证...</span>
                     </>
                   ) : (
                     <>
                       <LogIn className="w-3.5 h-3.5" />
-                      <span>Sign in</span>
+                      <span>登录</span>
                     </>
                   )}
                 </button>
@@ -322,14 +322,14 @@ export default function AuthGate({ children }: AuthGateProps) {
           </div>
 
           <div className="flex items-center justify-center gap-4 mt-6 text-xs" style={{ color: 'var(--v-text-muted)' }}>
-            <a href="https://www.vigolium.com/" target="_blank" rel="noopener noreferrer" className="text-[var(--v-accent)] auth-link-glow no-underline hover:no-underline">[website]</a>
+            <a href="https://www.vigolium.com/" target="_blank" rel="noopener noreferrer" className="text-[var(--v-accent)] auth-link-glow no-underline hover:no-underline">[官网]</a>
             <span>·</span>
-            <a href="https://console.vigolium.com/" target="_blank" rel="noopener noreferrer" className="text-[var(--v-accent)] auth-link-glow no-underline hover:no-underline">[vigolium cloud]</a>
+            <a href="https://console.vigolium.com/" target="_blank" rel="noopener noreferrer" className="text-[var(--v-accent)] auth-link-glow no-underline hover:no-underline">[云控制台]</a>
             <span>·</span>
-            <a href="https://docs.vigolium.com/" target="_blank" rel="noopener noreferrer" className="text-[var(--v-accent)] auth-link-glow no-underline hover:no-underline">[docs]</a>
+            <a href="https://docs.vigolium.com/" target="_blank" rel="noopener noreferrer" className="text-[var(--v-accent)] auth-link-glow no-underline hover:no-underline">[文档]</a>
           </div>
           <p className="text-xs text-center mt-2" style={{ color: 'var(--v-text-muted)' }}>
-            Crafted with <span className="text-[var(--v-error)]">&lt;3</span> by{' '}
+            由 <span className="text-[var(--v-error)]">&lt;3</span> 倾心打造 ·{' '}
             <a href="https://twitter.com/j3ssie" target="_blank" rel="noopener noreferrer" className="text-[var(--v-accent)] auth-link-glow no-underline hover:no-underline">@j3ssie</a>
           </p>
         </div>

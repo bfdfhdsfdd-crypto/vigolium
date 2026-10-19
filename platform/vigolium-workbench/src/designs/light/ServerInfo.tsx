@@ -8,7 +8,7 @@ export default function ServerInfo({ serverInfo }: Props) {
   if (!serverInfo) {
     return (
       <div className="border border-[#bbc3c4] bg-[#f6edda] p-3 h-full">
-        <div className="text-[#0078c8] text-xs font-bold mb-2">SERVER</div>
+        <div className="text-[#0078c8] text-xs font-bold mb-2">服务器</div>
         <div className="flex items-start gap-3">
           <div className="v-skeleton h-20 w-20 rounded-lg flex-shrink-0" />
           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs flex-1 content-start">
@@ -34,7 +34,7 @@ export default function ServerInfo({ serverInfo }: Props) {
 
   return (
     <div className="border border-[#bbc3c4] bg-[#f6edda] p-3 v-fade-in h-full">
-      <div className="text-[#0078c8] text-xs font-bold mb-2">SERVER</div>
+      <div className="text-[#0078c8] text-xs font-bold mb-2">服务器</div>
       <div className="flex items-start gap-3">
         <img src="/vigolium-logo-minimal.png" alt="" className="h-20 w-20 rounded-lg border border-[#00b368]/50 shadow-[0_0_12px_rgba(0,179,104,0.3)] flex-shrink-0" />
         <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-xs flex-1 content-start">

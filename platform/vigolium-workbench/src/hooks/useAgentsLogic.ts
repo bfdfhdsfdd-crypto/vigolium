@@ -23,46 +23,46 @@ export interface ChatMessage {
 }
 
 export const AGENT_OPTIONS = [
-  { value: '', label: 'default' },
+  { value: '', label: '默认' },
   { value: 'claude', label: 'claude' },
   { value: 'codex', label: 'codex' },
   { value: 'gemini', label: 'gemini' },
-  { value: 'custom', label: 'custom' },
+  { value: 'custom', label: '自定义' },
 ];
 
 export const PROFILE_OPTIONS: { value: ScanProfile; label: string; description: string; icon: string }[] = [
-  { value: 'quick', label: 'Quick Scan', description: 'Fast surface-level scan with light profile', icon: 'zap' },
-  { value: 'deep', label: 'Deep Scan', description: 'Thorough scan with crawling & discovery', icon: 'layers' },
-  { value: 'code-review', label: 'Code Review', description: 'Static analysis & source code audit', icon: 'scroll-text' },
-  { value: 'autopilot', label: 'Autopilot', description: 'AI agent drives the CLI autonomously', icon: 'bot' },
+  { value: 'quick', label: '快速扫描', description: '使用轻量配置快速检查常见问题', icon: 'zap' },
+  { value: 'deep', label: '深度扫描', description: '执行全面爬取与目标发现', icon: 'layers' },
+  { value: 'code-review', label: '代码审查', description: '静态分析与源代码审计', icon: 'scroll-text' },
+  { value: 'autopilot', label: '自动驾驶', description: 'AI 代理自主操作命令行', icon: 'bot' },
 ];
 
 export const AUDIT_PREP_MODE_OPTIONS = [
-  { value: '', label: 'Default' },
-  { value: 'lite', label: 'Lite' },
-  { value: 'scan', label: 'Scan' },
-  { value: 'deep', label: 'Deep' },
+  { value: '', label: '默认' },
+  { value: 'lite', label: '轻量' },
+  { value: 'scan', label: '扫描' },
+  { value: 'deep', label: '深度' },
 ];
 
 export const INTENSITY_OPTIONS = [
-  { value: '', label: 'Default (balanced)' },
-  { value: 'quick', label: 'Quick', description: 'Fast surface-level scan for common issues', icon: 'zap' },
-  { value: 'balanced', label: 'Balanced', description: 'Thorough scan with smart defaults', icon: 'scale' },
-  { value: 'deep', label: 'Deep', description: 'Exhaustive scan with full discovery and verification', icon: 'layers' },
+  { value: '', label: '默认（均衡）' },
+  { value: 'quick', label: '快速', description: '快速检查常见问题', icon: 'zap' },
+  { value: 'balanced', label: '均衡', description: '使用智能默认项进行全面扫描', icon: 'scale' },
+  { value: 'deep', label: '深度', description: '执行完整发现与验证的深度扫描', icon: 'layers' },
 ];
 
 export const AUDIT_MODE_OPTIONS = [
-  { value: '', label: 'Default (balanced)' },
-  { value: 'lite', label: 'Lite' },
-  { value: 'balanced', label: 'Balanced' },
-  { value: 'deep', label: 'Deep' },
-  { value: 'revisit', label: 'Revisit' },
-  { value: 'confirm', label: 'Confirm' },
-  { value: 'merge', label: 'Merge' },
-  { value: 'diff', label: 'Diff' },
-  { value: 'longshot', label: 'Longshot' },
-  { value: 'status', label: 'Status' },
-  { value: 'smoke', label: 'Smoke' },
+  { value: '', label: '默认（均衡）' },
+  { value: 'lite', label: '轻量' },
+  { value: 'balanced', label: '均衡' },
+  { value: 'deep', label: '深度' },
+  { value: 'revisit', label: '重新检查' },
+  { value: 'confirm', label: '确认' },
+  { value: 'merge', label: '合并' },
+  { value: 'diff', label: '差异' },
+  { value: 'longshot', label: '深度排查' },
+  { value: 'status', label: '状态检查' },
+  { value: 'smoke', label: '冒烟测试' },
 ];
 
 const HTTP_METHODS = /^(GET|POST|PUT|DELETE|PATCH|HEAD|OPTIONS|TRACE|CONNECT)\s/;

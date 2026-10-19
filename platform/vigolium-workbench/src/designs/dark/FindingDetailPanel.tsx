@@ -89,7 +89,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           <button
             onClick={() => { navigator.clipboard.writeText(window.location.href); setLinkCopied(true); setTimeout(() => setLinkCopied(false), 2000); }}
             className="text-[#918175] hover:text-[#68a8e4] text-xs px-1"
-            title="Copy link"
+            title="复制链接"
           >
             {linkCopied ? <Check className="w-3 h-3" /> : <Link className="w-3 h-3" />}
           </button>
@@ -98,11 +98,11 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
       </div>
 
       {isLoading && (
-        <div className="p-3 text-xs text-[#918175]">loading...</div>
+        <div className="p-3 text-xs text-[#918175]">加载中...</div>
       )}
 
       {isError && (
-        <div className="p-3 text-xs text-[#ef2f27]">failed to load finding</div>
+        <div className="p-3 text-xs text-[#ef2f27]">加载漏洞详情失败</div>
       )}
 
       {finding && (
@@ -110,48 +110,58 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           {/* Severity + Confidence + Type + Source */}
           <div className="flex flex-wrap gap-x-3 gap-y-0.5">
             <div>
-              <span className="text-[#918175]">severity: </span>
+              <span className="text-[#918175]">严重性：</span>
               <span className="font-bold uppercase" style={{ color: SEVERITY_COLORS[finding.severity] || '#918175' }}>
                 {finding.severity}
               </span>
             </div>
             <div>
-              <span className="text-[#918175]">confidence: </span>
+              <span className="text-[#918175]">置信度：</span>
               <span style={{ color: CONFIDENCE_COLORS[finding.confidence] || '#918175' }}>
                 {finding.confidence}
               </span>
             </div>
             {finding.module_type && (
-              <div><span className="text-[#918175]">type: </span><span className="text-[#68a8e4]">{finding.module_type}</span></div>
+              <div><span className="text-[#918175]">类型：</span><span className="text-[#68a8e4]">{finding.module_type}</span></div>
             )}
             {finding.finding_source && (
-              <div><span className="text-[#918175]">source: </span><span className="text-[#2be4d0]">{finding.finding_source}</span></div>
+              <div><span className="text-[#918175]">来源：</span><span className="text-[#2be4d0]">{finding.finding_source}</span></div>
             )}
             <div className="flex items-center gap-1">
-              <span className="text-[#918175]">status: </span>
+              <span className="text-[#918175]">状态：</span>
               <Dropdown
                 value={finding.status || 'draft'}
-                options={FINDING_STATUSES.map((s) => ({ value: s, label: s }))}
+                options={FINDING_STATUSES.map((s) => ({
+                  value: s,
+                  label: ({
+                    draft: '草稿',
+                    triaged: '已分流',
+                    confirmed: '已确认',
+                    false_positive: '误报',
+                    accepted_risk: '接受风险',
+                    fixed: '已修复',
+                  }[s]),
+                }))}
                 onChange={(next) => {
                   if (next === (finding.status || 'draft')) return;
                   updateStatus.mutate(
                     { id: finding.id, status: next },
                     {
-                      onSuccess: () => toast(`status → ${next}`, 'success'),
-                      onError: (err) => toast(`failed to update status: ${(err as Error).message}`, 'error'),
+                      onSuccess: () => toast(`状态已更新：${next}`, 'success'),
+                      onError: (err) => toast(`更新状态失败：${(err as Error).message}`, 'error'),
                     }
                   );
                 }}
               />
             </div>
             {finding.cvss_score != null && finding.cvss_score > 0 && (
-              <div><span className="text-[#918175]">cvss: </span><span className="text-[#fce8c3] font-semibold">{finding.cvss_score}</span></div>
+              <div><span className="text-[#918175]">CVSS 评分：</span><span className="text-[#fce8c3] font-semibold">{finding.cvss_score}</span></div>
             )}
           </div>
 
           {/* Module */}
           <div className="text-[#fce8c3] [&_code]:text-[#98bc37] [&_code]:bg-[#0e0d0b] [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded-sm [&_p]:inline">
-            <span className="text-[#918175]">module: </span>
+            <span className="text-[#918175]">模块：</span>
             <ReactMarkdown remarkPlugins={[remarkGfm]}>{finding.module_name}</ReactMarkdown>
             <span className="text-[#403d38]"> ({finding.module_id})</span>
           </div>
@@ -159,7 +169,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           {/* Module short description */}
           {finding.module_short && (
             <div className="text-[#918175] italic [&_code]:text-[#98bc37] [&_code]:bg-[#0e0d0b] [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded-sm [&_code]:not-italic [&_p]:inline">
-              <span>module_short: </span>
+              <span>模块简称：</span>
               <ReactMarkdown remarkPlugins={[remarkGfm]}>{finding.module_short}</ReactMarkdown>
             </div>
           )}
@@ -168,10 +178,10 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           {(finding.repo_name || finding.source_file) && (
             <div className="space-y-0.5">
               {finding.repo_name && (
-                <div><span className="text-[#918175]">repo: </span><span className="text-[#2be4d0] font-semibold">{finding.repo_name}</span></div>
+                <div><span className="text-[#918175]">仓库：</span><span className="text-[#2be4d0] font-semibold">{finding.repo_name}</span></div>
               )}
               {finding.source_file && (
-                <div><span className="text-[#918175]">source_file: </span><span className="text-[#fce8c3]">{finding.source_file}</span></div>
+                <div><span className="text-[#918175]">源文件：</span><span className="text-[#fce8c3]">{finding.source_file}</span></div>
               )}
             </div>
           )}
@@ -180,7 +190,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           <div className="space-y-0.5">
             {finding.tags && finding.tags.length > 0 && (
               <div className="flex flex-wrap items-center gap-1">
-                <span className="text-[#918175]">tags:</span>
+                <span className="text-[#918175]">标签：</span>
                 {finding.tags.map((tag) => (
                   <span key={tag} className="px-1 py-px border border-[#2e2b26] text-[#68a8e4] text-[10px]">{tag}</span>
                 ))}
@@ -193,7 +203,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
               const visible = needsCollapse && !matchedAtExpanded ? items.slice(0, MATCHED_AT_LIMIT) : items;
               return (
                 <div className="flex flex-wrap items-baseline gap-x-1">
-                  <span className="text-[#918175]">matched_at: <span className="text-[#403d38]">({items.length})</span></span>
+                  <span className="text-[#918175]">匹配位置：<span className="text-[#403d38]">({items.length})</span></span>
                   <span className="text-[#fce8c3] break-all">{visible.join(', ')}</span>
                   {needsCollapse && (
                     <button
@@ -207,10 +217,10 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
               );
             })()}
             <div className="flex flex-wrap gap-x-3 text-[#918175]">
-              <span>finding_hash: <span className="text-[#fce8c3] break-all">{finding.finding_hash}</span></span>
-              <span>found_at: <span className="text-[#fce8c3]">{formatDate(finding.found_at)}</span></span>
-              {finding.scan_uuid && <span>scan_uuid: <span className="text-[#fce8c3]">{finding.scan_uuid}</span></span>}
-              {finding.agent_run_uuid && <span>agent_run: <span className="text-[#fce8c3]">{finding.agent_run_uuid}</span></span>}
+              <span>漏洞指纹：<span className="text-[#fce8c3] break-all">{finding.finding_hash}</span></span>
+              <span>发现时间：<span className="text-[#fce8c3]">{formatDate(finding.found_at)}</span></span>
+              {finding.scan_uuid && <span>扫描 UUID：<span className="text-[#fce8c3]">{finding.scan_uuid}</span></span>}
+              {finding.agent_run_uuid && <span>代理运行 ID：<span className="text-[#fce8c3]">{finding.agent_run_uuid}</span></span>}
             </div>
           </div>
 
@@ -218,7 +228,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           {finding.description && (
             <div>
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[#918175]">description:</span>
+                <span className="text-[#918175]">描述：</span>
                 <div className="flex gap-0.5">
                   <button
                     onClick={() => setDescTab('rendered')}
@@ -236,7 +246,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
                     onClick={() => { navigator.clipboard.writeText(finding.description!); setCopied(true); setTimeout(() => setCopied(false), 1500); }}
                     className="px-1.5 py-0.5 text-[10px] border border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]"
                   >
-                    {copied ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />copied!</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />copy</>}
+                    {copied ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />已复制！</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />复制</>}
                   </button>
                 </div>
               </div>
@@ -257,12 +267,12 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           {finding.extracted_results && finding.extracted_results.length > 0 && (
             <div>
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[#918175]">extracted_results:</span>
+                <span className="text-[#918175]">提取结果：</span>
                 <button
                   onClick={() => { navigator.clipboard.writeText(finding.extracted_results!.join('\n')); setCopiedExtracted(true); setTimeout(() => setCopiedExtracted(false), 1500); }}
                   className="px-1.5 py-0.5 text-[10px] border border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]"
                 >
-                  {copiedExtracted ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />copied!</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />copy</>}
+                  {copiedExtracted ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />已复制！</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />复制</>}
                 </button>
               </div>
               <pre className="bg-[#141310] border border-[#2e2b26] p-2 overflow-x-auto text-[#fce8c3] whitespace-pre-wrap break-all max-h-32 overflow-y-auto">
@@ -274,7 +284,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           {/* HTTP Record UUIDs */}
           {finding.http_record_uuids && finding.http_record_uuids.length > 0 && (
             <div>
-              <div className="text-[#918175] mb-0.5">http_records:</div>
+              <div className="text-[#918175] mb-0.5">HTTP 记录：</div>
               <ul className="space-y-0.5">
                 {finding.http_record_uuids.map((uuid) => (
                   <li key={uuid} className="text-[#68a8e4] break-all">{uuid}</li>
@@ -287,18 +297,18 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           {finding.request && (
             <div>
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[#918175]">request:</span>
+                <span className="text-[#918175]">请求：</span>
                 <button
                   onClick={() => { navigator.clipboard.writeText(finding.request!); setCopiedRequest(true); setTimeout(() => setCopiedRequest(false), 1500); }}
                   className="px-1.5 py-0.5 text-[10px] border border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]"
                 >
-                  {copiedRequest ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />copied!</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />copy</>}
+                  {copiedRequest ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />已复制！</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />复制</>}
                 </button>
                 <button
                   onClick={() => { navigator.clipboard.writeText(rawRequestToCurl(finding.request!, finding.matched_at)); setCopiedCurl(true); setTimeout(() => setCopiedCurl(false), 1500); }}
                   className="px-1.5 py-0.5 text-[10px] border border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]"
                 >
-                  {copiedCurl ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />copied!</> : <><Terminal size={10} className="inline-block mr-0.5 -mt-px" />curl</>}
+                  {copiedCurl ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />已复制！</> : <><Terminal size={10} className="inline-block mr-0.5 -mt-px" />复制 curl 命令</>}
                 </button>
               </div>
               <pre className="bg-[#141310] border border-[#2e2b26] p-2 overflow-x-auto text-[#fce8c3] whitespace-pre-wrap break-all max-h-64 overflow-y-auto">
@@ -311,12 +321,12 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
           {finding.response && (
             <div>
               <div className="flex items-center gap-2 mb-0.5">
-                <span className="text-[#918175]">response:</span>
+                <span className="text-[#918175]">响应：</span>
                 <button
                   onClick={() => { navigator.clipboard.writeText(finding.response!); setCopiedResponse(true); setTimeout(() => setCopiedResponse(false), 1500); }}
                   className="px-1.5 py-0.5 text-[10px] border border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]"
                 >
-                  {copiedResponse ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />copied!</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />copy</>}
+                  {copiedResponse ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />已复制！</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />复制</>}
                 </button>
               </div>
               <pre className="bg-[#141310] border border-[#2e2b26] p-2 overflow-x-auto text-[#fce8c3] whitespace-pre-wrap break-all max-h-64 overflow-y-auto">
@@ -346,7 +356,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
             return (
               <div>
                 <div className="flex items-start gap-2 mb-0.5">
-                  <span className="text-[#918175] shrink-0 pt-0.5">additional_evidence: <span className="text-[#403d38]">({allItems.length})</span></span>
+                  <span className="text-[#918175] shrink-0 pt-0.5">其他证据：<span className="text-[#403d38]">({allItems.length})</span></span>
                   <div className="flex flex-wrap gap-0.5">
                     {visibleItems.map((item, i) => (
                       <button
@@ -369,7 +379,7 @@ export default function FindingDetailPanel({ findingId, onClose }: Props) {
                       onClick={() => { navigator.clipboard.writeText(evidence); setCopiedEvidence(true); setTimeout(() => setCopiedEvidence(false), 1500); }}
                       className="px-1.5 py-0.5 text-[10px] border border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]"
                     >
-                      {copiedEvidence ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />copied!</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />copy</>}
+                      {copiedEvidence ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />已复制！</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />复制</>}
                     </button>
                   </div>
                 </div>

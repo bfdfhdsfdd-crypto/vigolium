@@ -95,11 +95,11 @@ export default function HttpRecordDetailPanel({ uuid, onClose, onFilterHostname 
       </div>
 
       {isLoading && (
-        <div className="p-3 text-xs text-[#708e8e]">loading...</div>
+        <div className="p-3 text-xs text-[#708e8e]">加载中...</div>
       )}
 
       {isError && (
-        <div className="p-3 text-xs text-[#e34e1c]">failed to load record</div>
+        <div className="p-3 text-xs text-[#e34e1c]">加载记录失败</div>
       )}
 
       {record && (
@@ -120,13 +120,13 @@ export default function HttpRecordDetailPanel({ uuid, onClose, onFilterHostname 
           {/* URL + action buttons */}
           <div>
             <div className="flex items-center gap-1.5 mb-1">
-              <span className="text-[#708e8e]">url:</span>
+              <span className="text-[#708e8e]">网址：</span>
               <CopyButton text={record.url} label="url" />
               {onFilterHostname && (
                 <button
                   onClick={() => onFilterHostname(record.hostname)}
                   className="inline-flex items-center gap-1 px-1.5 py-0.5 border border-[#bbc3c4] text-[#708e8e] hover:text-[#0078c8] hover:border-[#0078c8]/50 transition-colors text-xs"
-                  title="Filter by this hostname"
+                  title="按此主机名筛选"
                 >
                   <Filter className="w-3 h-3" />
                   filter host
@@ -138,24 +138,24 @@ export default function HttpRecordDetailPanel({ uuid, onClose, onFilterHostname 
 
           {/* Connection, sizes & metadata */}
           <div className="grid grid-cols-2 gap-x-4 gap-y-0.5 text-[#708e8e]">
-            <div>scheme: <span className="text-[#005661]">{record.scheme}</span></div>
-            <div>host: <span className="text-[#005661]">{record.hostname}:{record.port}</span></div>
-            {record.ip && <div>ip: <span className="text-[#005661]">{record.ip}</span></div>}
-            <div>http_version: <span className="text-[#005661]">{record.http_version}</span></div>
-            <div>req_size: <span className="text-[#005661]">{formatBytes(record.request_content_length)}</span></div>
-            <div>res_size: <span className="text-[#005661]">{formatBytes(record.response_content_length)}</span></div>
-            {record.request_content_type && <div>req_ctype: <span className="text-[#005661]">{record.request_content_type}</span></div>}
-            {record.response_content_type && <div>res_ctype: <span className="text-[#005661]">{record.response_content_type}</span></div>}
-            <div>response_time: <span className="text-[#005661]">{record.response_time_ms}ms</span></div>
-            {record.source && <div>source: <span className="text-[#005661]">{record.source}</span></div>}
-            <div>risk_score: <span className="text-[#005661]">{record.risk_score}</span></div>
-            <div>sent_at: <span className="text-[#005661]">{formatDate(record.sent_at)}</span></div>
+            <div>协议：<span className="text-[#005661]">{record.scheme}</span></div>
+            <div>主机：<span className="text-[#005661]">{record.hostname}:{record.port}</span></div>
+            {record.ip && <div>IP 地址：<span className="text-[#005661]">{record.ip}</span></div>}
+            <div>HTTP 版本：<span className="text-[#005661]">{record.http_version}</span></div>
+            <div>请求大小：<span className="text-[#005661]">{formatBytes(record.request_content_length)}</span></div>
+            <div>响应大小：<span className="text-[#005661]">{formatBytes(record.response_content_length)}</span></div>
+            {record.request_content_type && <div>请求内容类型：<span className="text-[#005661]">{record.request_content_type}</span></div>}
+            {record.response_content_type && <div>响应内容类型：<span className="text-[#005661]">{record.response_content_type}</span></div>}
+            <div>响应时间：<span className="text-[#005661]">{record.response_time_ms}ms</span></div>
+            {record.source && <div>来源：<span className="text-[#005661]">{record.source}</span></div>}
+            <div>风险评分：<span className="text-[#005661]">{record.risk_score}</span></div>
+            <div>发送时间：<span className="text-[#005661]">{formatDate(record.sent_at)}</span></div>
           </div>
 
           {/* Parameters */}
           {record.parameters && record.parameters.length > 0 && (
             <div>
-              <div className="text-[#708e8e] mb-0.5">parameters:</div>
+              <div className="text-[#708e8e] mb-0.5">参数：</div>
               <div className="space-y-0.5">
                 {record.parameters.map((p, i) => (
                   <div key={i} className="text-[#005661]">
@@ -171,7 +171,7 @@ export default function HttpRecordDetailPanel({ uuid, onClose, onFilterHostname 
           {/* Remarks */}
           {record.remarks && record.remarks.length > 0 && (
             <div className="flex items-center gap-1 flex-wrap">
-              <span className="text-[#708e8e]">remarks:</span>
+              <span className="text-[#708e8e]">备注：</span>
               {record.remarks.map((r, i) => (
                 <span key={i} className="text-[#005661] border border-[#bbc3c4] px-1">{r}</span>
               ))}
@@ -182,7 +182,7 @@ export default function HttpRecordDetailPanel({ uuid, onClose, onFilterHostname 
           {record.raw_request && (
             <div>
               <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-[#708e8e]">raw_request:</span>
+                <span className="text-[#708e8e]">原始请求：</span>
                 <CopyButton text={safeAtob(record.raw_request)} label="request" />
                 <CopyButton text={rawRequestToCurl(safeAtob(record.raw_request), [record.url])} label="curl" />
               </div>
@@ -196,7 +196,7 @@ export default function HttpRecordDetailPanel({ uuid, onClose, onFilterHostname 
           {record.raw_response && (
             <div>
               <div className="flex items-center gap-1.5 mb-0.5">
-                <span className="text-[#708e8e]">raw_response:</span>
+                <span className="text-[#708e8e]">原始响应：</span>
                 <CopyButton text={safeAtob(record.raw_response)} label="response" />
               </div>
               <pre className="bg-[#ede4d1] border border-[#bbc3c4] p-2 overflow-x-auto text-[#005661] whitespace-pre-wrap break-all max-h-96 overflow-y-auto">

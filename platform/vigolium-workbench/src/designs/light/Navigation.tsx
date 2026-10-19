@@ -36,47 +36,47 @@ interface NavItem {
 /* ── Static/workbench mode: flat list ─────────────────────────────── */
 
 const STATIC_NAV_ITEMS: NavItem[] = [
-  { href: '/', label: 'DASHBOARD', icon: LayoutDashboard, group: 'default' },
-  { href: '/findings', label: 'FINDINGS', icon: ShieldAlert, group: 'default' },
-  { href: '/http-records', label: 'HTTP RECORDS', icon: Network, group: 'default' },
-  { href: '/oast-interactions', label: 'OAST', icon: Radio, group: 'default' },
-  { href: '/modules', label: 'MODULES', icon: Blocks, group: 'blue' },
-  { href: '/extensions', label: 'EXTENSIONS', icon: Puzzle, group: 'blue' },
-  { href: '/ingest', label: 'INGEST', icon: Import, group: 'orange' },
-  { href: '/scan', label: 'NATIVE SCAN', icon: Radar, group: 'orange' },
-  { href: '/agentic-scan', label: 'AGENTIC SCAN', icon: Bot, group: 'orange' },
-  { href: '/database', label: 'DATABASE', icon: Database, group: 'blue' },
-  { href: '/settings', label: 'SETTINGS', icon: SlidersHorizontal, group: 'blue' },
+  { href: '/', label: '仪表盘', icon: LayoutDashboard, group: 'default' },
+  { href: '/findings', label: '漏洞发现', icon: ShieldAlert, group: 'default' },
+  { href: '/http-records', label: 'HTTP 记录', icon: Network, group: 'default' },
+  { href: '/oast-interactions', label: 'OAST 交互', icon: Radio, group: 'default' },
+  { href: '/modules', label: '扫描模块', icon: Blocks, group: 'blue' },
+  { href: '/extensions', label: '扩展', icon: Puzzle, group: 'blue' },
+  { href: '/ingest', label: '导入流量', icon: Import, group: 'orange' },
+  { href: '/scan', label: '原生扫描', icon: Radar, group: 'orange' },
+  { href: '/agentic-scan', label: '智能代理扫描', icon: Bot, group: 'orange' },
+  { href: '/database', label: '数据库', icon: Database, group: 'blue' },
+  { href: '/settings', label: '设置', icon: SlidersHorizontal, group: 'blue' },
 ];
 
 /* ── Cloud/console mode: grouped nav ──────────────────────────────── */
 
 const CLOUD_NAV_GROUPS: { label: string; items: NavItem[] }[] = [
   {
-    label: 'Data',
+    label: '数据',
     items: [
-      { href: '/', label: 'DASHBOARD', icon: LayoutDashboard, group: 'default' },
-      { href: '/findings', label: 'FINDINGS', icon: ShieldAlert, group: 'default' },
-      { href: '/http-records', label: 'HTTP RECORDS', icon: Network, group: 'default' },
-      { href: '/oast-interactions', label: 'OAST', icon: Radio, group: 'default' },
+      { href: '/', label: '仪表盘', icon: LayoutDashboard, group: 'default' },
+      { href: '/findings', label: '漏洞发现', icon: ShieldAlert, group: 'default' },
+      { href: '/http-records', label: 'HTTP 记录', icon: Network, group: 'default' },
+      { href: '/oast-interactions', label: 'OAST 交互', icon: Radio, group: 'default' },
     ],
   },
   {
-    label: 'Scan',
+    label: '扫描',
     items: [
-      { href: '/modules', label: 'MODULES', icon: Blocks, group: 'blue' },
-      { href: '/extensions', label: 'EXTENSIONS', icon: Puzzle, group: 'blue' },
-      { href: '/ingest', label: 'INGEST', icon: Import, group: 'orange' },
-      { href: '/scan', label: 'NATIVE SCAN', icon: Radar, group: 'orange' },
-      { href: '/agentic-scan', label: 'AGENTIC SCAN', icon: Bot, group: 'orange' },
-      { href: '/on-demand-audit', label: 'ON-DEMAND AUDIT', icon: ShieldCheck, group: 'orange' },
+      { href: '/modules', label: '扫描模块', icon: Blocks, group: 'blue' },
+      { href: '/extensions', label: '扩展', icon: Puzzle, group: 'blue' },
+      { href: '/ingest', label: '导入流量', icon: Import, group: 'orange' },
+      { href: '/scan', label: '原生扫描', icon: Radar, group: 'orange' },
+      { href: '/agentic-scan', label: '智能代理扫描', icon: Bot, group: 'orange' },
+      { href: '/on-demand-audit', label: '按需审计', icon: ShieldCheck, group: 'orange' },
     ],
   },
   {
-    label: 'Admin',
+    label: '管理',
     items: [
-      { href: '/billing', label: 'BILLING', icon: CreditCard, group: 'blue' },
-      { href: '/settings', label: 'SETTINGS', icon: SlidersHorizontal, group: 'blue' },
+      { href: '/billing', label: '账单', icon: CreditCard, group: 'blue' },
+      { href: '/settings', label: '设置', icon: SlidersHorizontal, group: 'blue' },
     ],
   },
 ];
@@ -111,7 +111,7 @@ export default function Navigation() {
 
   const handleDemoBlock = (e: React.MouseEvent, label: string) => {
     e.preventDefault();
-    toast(`${label} is disabled in demo mode`, 'info');
+    toast(`演示模式下无法使用「${label}」`, 'info');
   };
 
   if (isStaticBuild) {
@@ -170,7 +170,7 @@ export default function Navigation() {
                       color: colorVar,
                       backgroundColor: `color-mix(in srgb, ${colorVar} 10%, transparent)`,
                     } : undefined}
-                    title={isBlocked ? `${item.label} is disabled in demo mode` : item.label}
+                    title={isBlocked ? `演示模式下无法使用「${item.label}」` : item.label}
                     aria-disabled={isBlocked}
                   >
                     <item.icon className="w-3 h-3 shrink-0" />

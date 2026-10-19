@@ -132,14 +132,14 @@ export default function HttpRecordsChart({ records }: Props) {
 
   return (
     <div className="border border-[#2e2b26] bg-[#1c1b19] p-3 h-full">
-      <div className="text-[#7fd962] text-xs font-bold mb-2">HTTP RECORDS BREAKDOWN</div>
+      <div className="text-[#7fd962] text-xs font-bold mb-2">HTTP 记录分布</div>
       {loading ? (
         <ChartSkeleton />
       ) : hasData ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 v-fade-in">
           {/* Status Code Distribution */}
           <div>
-            <div className="text-[#918175] text-[10px] font-bold uppercase mb-1">By Status Code</div>
+            <div className="text-[#918175] text-[10px] font-bold uppercase mb-1">按状态码</div>
             <div className="flex items-start gap-4">
               <DonutChart data={statusData} colors={STATUS_COLORS} />
               <div className="space-y-0.5 text-xs flex-1 min-w-0 pt-1">
@@ -165,7 +165,7 @@ export default function HttpRecordsChart({ records }: Props) {
 
           {/* Top Content Types */}
           <div>
-            <div className="text-[#918175] text-[10px] font-bold uppercase mb-1">Top Content Types</div>
+            <div className="text-[#918175] text-[10px] font-bold uppercase mb-1">热门内容类型</div>
             <div className="flex items-start gap-4">
               <DonutChart data={contentTypeData} colors={CHART_COLORS} />
               <div className="space-y-0.5 text-xs flex-1 min-w-0 pt-1">
@@ -190,7 +190,7 @@ export default function HttpRecordsChart({ records }: Props) {
           </div>
         </div>
       ) : (
-        <div className="text-[#403d38] text-xs py-4 v-fade-in">No HTTP records data</div>
+        <div className="text-[#403d38] text-xs py-4 v-fade-in">暂无 HTTP 记录数据</div>
       )}
     </div>
   );

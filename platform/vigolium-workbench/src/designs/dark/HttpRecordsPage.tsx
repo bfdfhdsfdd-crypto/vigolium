@@ -12,7 +12,7 @@ import type { HTTPRecord, HttpRecordsQueryParams } from '@/api/types';
 
 import { registerAgGrid } from '@/lib/ag-grid-register';
 import { formatDate, formatBytes } from '@/lib/formatters';
-import { METHOD_COLORS, STATUS_COLORS, AG_GRID_THEME } from './theme';
+import { METHOD_COLORS, STATUS_COLORS, AG_GRID_THEME, AG_GRID_LOCALE_ZH_CN } from './theme';
 import PageShell from './PageShell';
 import HttpRecordDetailPanel from './HttpRecordDetailPanel';
 import Dropdown from './Dropdown';
@@ -123,13 +123,13 @@ function GroupedByHostView({
     <div className="overflow-y-auto flex-1">
       {/* Column headers */}
       <div className="flex items-center gap-2 px-3 pl-7 py-1 border-b border-[#2e2b26] text-[#918175] text-xs font-bold sticky top-0 bg-[#1c1b19] z-10">
-        <span className="w-16 shrink-0">METH</span>
-        <span className="w-10 shrink-0">SC</span>
-        <span className="flex-1">PATH</span>
-        <span className="w-16 shrink-0 text-right">CTYPE</span>
-        <span className="w-14 shrink-0 text-right">SIZE</span>
-        <span className="w-12 shrink-0 text-right">WORDS</span>
-        <span className="w-12 shrink-0 text-right">MS</span>
+        <span className="w-16 shrink-0">方法</span>
+        <span className="w-10 shrink-0">状态码</span>
+        <span className="flex-1">路径</span>
+        <span className="w-16 shrink-0 text-right">内容类型</span>
+        <span className="w-14 shrink-0 text-right">大小</span>
+        <span className="w-12 shrink-0 text-right">词数</span>
+        <span className="w-12 shrink-0 text-right">耗时（毫秒）</span>
       </div>
       {grouped.map(([host, recs]) => (
         <div key={host}>
@@ -173,7 +173,7 @@ function GroupedByHostView({
         </div>
       ))}
       {grouped.length === 0 && (
-        <div className="p-3 text-xs text-[#403d38] text-center">no records</div>
+        <div className="p-3 text-xs text-[#403d38] text-center">暂无记录</div>
       )}
     </div>
   );
@@ -217,9 +217,9 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
     const succeeded = results.filter((r) => r.status === 'fulfilled').length;
     const failed = results.length - succeeded;
     if (failed === 0) {
-      toast(`Deleted ${succeeded} record(s)`, 'success');
+      toast(`已删除 ${succeeded} 条记录`, 'success');
     } else {
-      toast(`Deleted ${succeeded}, failed ${failed}`, 'error');
+      toast(`删除成功 ${succeeded} 项，失败 ${failed} 项`, 'error');
     }
     setSelectedRows([]);
     gridRef.current?.api?.deselectAll();
@@ -259,7 +259,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
 
   const sourceOptions = useMemo(
     () => [
-      { value: '', label: 'source:all' },
+      { value: '', label: '来源：全部' },
       ...seenSources.map((s) => ({ value: s, label: s })),
     ],
     [seenSources]
@@ -380,7 +380,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
     const uuids = selectedRows.map((r) => r.uuid);
     scanRecords.mutate({ record_uuids: uuids }, {
       onSuccess: (res) => {
-        toast(`Scan started: ${res.scan_uuid} (${res.records_to_scan ?? uuids.length} records)`, 'success');
+        toast(`扫描已启动：${res.scan_uuid}（${res.records_to_scan ?? uuids.length} 条记录）`, 'success');
       },
       onError: (err) => {
         toast((err as Error).message, 'error');
@@ -416,8 +416,8 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
         <div className={`border border-[#2e2b26] bg-[#1c1b19] overflow-hidden flex flex-col ${selectedRecordUuid !== null ? 'w-1/2' : 'w-full'} transition-all`}>
           <div className="px-3 py-1.5 border-b border-[#2e2b26] flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-1.5">
-              <span className="text-[#7fd962] text-xs font-bold">HTTP_RECORDS</span>
-              <button onClick={() => refetch()} className="text-[#918175] hover:text-[#7fd962] transition-colors" title="Refresh">
+              <span className="text-[#7fd962] text-xs font-bold">HTTP 记录</span>
+              <button onClick={() => refetch()} className="text-[#918175] hover:text-[#7fd962] transition-colors" title="刷新">
                 <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin' : ''}`} />
               </button>
               {/* View tabs */}
@@ -429,7 +429,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
                       ? 'text-[#7fd962] bg-[#7fd962]/10'
                       : 'text-[#918175] hover:text-[#fce8c3]'
                   }`}
-                  title="Table view"
+                  title="表格视图"
                 >
                   <List className="w-3 h-3" />
                   Table
@@ -441,7 +441,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
                       ? 'text-[#7fd962] bg-[#7fd962]/10'
                       : 'text-[#918175] hover:text-[#fce8c3]'
                   }`}
-                  title="Group by hostname"
+                  title="按主机名分组"
                 >
                   <Layers className="w-3 h-3" />
                   By Host
@@ -452,7 +452,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
               <button
                 onClick={clearFilters}
                 disabled={!hasActiveFilters}
-                title="Clear all filters"
+                title="清除所有筛选条件"
                 className={`flex items-center gap-1 border text-xs px-2 py-0.5 transition-colors ${
                   hasActiveFilters
                     ? 'border-[#ef2f27]/50 text-[#ef2f27] bg-[#1c1b19] hover:bg-[#ef2f27]/10'
@@ -466,14 +466,14 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
                 value={methodFilter}
                 icon={<Activity className="w-3 h-3" />}
                 options={[
-                  { value: '', label: 'meth:all' },
+                  { value: '', label: '方法：全部' },
                   ...['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'HEAD', 'OPTIONS'].map((m) => ({ value: m, label: m })),
                 ]}
                 onChange={(v) => { setMethodFilter(v); resetOffset(); }}
               />
               <div className="flex items-center border border-[#2e2b26] bg-[#1c1b19] focus-within:border-[#7fd962]/50">
                 <Globe className="w-3 h-3 text-[#918175] ml-1.5 shrink-0" />
-                <input type="text" value={hostnameFilter} onChange={(e) => { setHostnameFilter(e.target.value); resetOffset(); }} placeholder="host..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-28 focus:outline-none" />
+                <input type="text" value={hostnameFilter} onChange={(e) => { setHostnameFilter(e.target.value); resetOffset(); }} placeholder="主机..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-28 focus:outline-none" />
               </div>
               <Dropdown
                 value={sourceFilter}
@@ -483,7 +483,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
               />
               <div className="flex items-center gap-0.5">
                 {[
-                  { value: '', label: 'ALL' },
+                  { value: '', label: '全部' },
                   { value: '2', label: '2xx' },
                   { value: '3', label: '3xx' },
                   { value: '4', label: '4xx' },
@@ -505,7 +505,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
               </div>
               <div className="flex items-center border border-[#2e2b26] bg-[#1c1b19] focus-within:border-[#7fd962]/50">
                 <Search className="w-3 h-3 text-[#918175] ml-1.5 shrink-0" />
-                <input type="text" value={searchInput} onChange={(e) => { setSearchInput(e.target.value); resetOffset(); }} placeholder="search..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-36 focus:outline-none" />
+                <input type="text" value={searchInput} onChange={(e) => { setSearchInput(e.target.value); resetOffset(); }} placeholder="搜索..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-36 focus:outline-none" />
               </div>
               <div className="flex items-center gap-0.5">
                 <button
@@ -515,7 +515,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
                       ? 'border-[#68a8e4]/50 text-[#68a8e4] bg-[#68a8e4]/10'
                       : 'border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]'
                   }`}
-                  title="Show only records with a title"
+                  title="仅显示带标题的记录"
                 >
                   title
                 </button>
@@ -526,7 +526,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
                       ? 'border-[#2be4d0]/50 text-[#2be4d0] bg-[#2be4d0]/10'
                       : 'border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]'
                   }`}
-                  title="Show only records with remarks"
+                  title="仅显示带备注的记录"
                 >
                   remarks
                 </button>
@@ -537,7 +537,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
                       ? 'border-[#f0c674]/50 text-[#f0c674] bg-[#f0c674]/10'
                       : 'border-[#2e2b26] text-[#918175] hover:text-[#fce8c3]'
                   }`}
-                  title="Hide static assets (images, fonts, CSS, JS, etc.)"
+                  title="隐藏静态资源（图片、字体、CSS、JS 等）"
                 >
                   -static
                 </button>
@@ -577,6 +577,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
             <>
               <div className={`${AG_GRID_THEME} w-full flex-1`}>
                 <AgGridReact<HTTPRecord>
+                  localeText={AG_GRID_LOCALE_ZH_CN}
                   ref={gridRef}
                   rowData={data?.data || []}
                   columnDefs={effectiveColumnDefs}
@@ -589,7 +590,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
                   onSelectionChanged={onSelectionChanged}
                   isExternalFilterPresent={isExternalFilterPresent}
                   doesExternalFilterPass={doesExternalFilterPass}
-                  overlayNoRowsTemplate='<span style="color:#403d38">no records</span>'
+                  overlayNoRowsTemplate='<span style="color:#403d38">暂无记录</span>'
                 />
               </div>
 
@@ -612,7 +613,7 @@ export default function HttpRecordsPage({ initialId }: { initialId?: string | nu
           {viewTab === 'by-host' && (
             <>
               {isLoading ? (
-                <div className="p-3 text-xs text-[#918175]">loading...</div>
+                <div className="p-3 text-xs text-[#918175]">加载中...</div>
               ) : (
                 <GroupedByHostView
                   records={data?.data || []}

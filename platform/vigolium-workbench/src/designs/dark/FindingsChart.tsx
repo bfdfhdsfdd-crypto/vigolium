@@ -130,14 +130,14 @@ export default function FindingsChart({ findings }: Props) {
 
   return (
     <div className="border border-[#2e2b26] bg-[#1c1b19] p-3 h-full">
-      <div className="text-[#7fd962] text-xs font-bold mb-2">FINDINGS BREAKDOWN</div>
+      <div className="text-[#7fd962] text-xs font-bold mb-2">漏洞分布</div>
       {loading ? (
         <ChartSkeleton />
       ) : hasData ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-3 v-fade-in">
           {/* Confidence Distribution */}
           <div>
-            <div className="text-[#918175] text-[10px] font-bold uppercase mb-1">By Confidence</div>
+            <div className="text-[#918175] text-[10px] font-bold uppercase mb-1">按置信度</div>
             <div className="flex items-start gap-4">
               <DonutChart data={confidenceData} colors={CONFIDENCE_COLORS} />
               <div className="space-y-0.5 text-xs flex-1 min-w-0 pt-1">
@@ -163,7 +163,7 @@ export default function FindingsChart({ findings }: Props) {
 
           {/* Top Modules */}
           <div>
-            <div className="text-[#918175] text-[10px] font-bold uppercase mb-1">Top Modules</div>
+            <div className="text-[#918175] text-[10px] font-bold uppercase mb-1">热门模块</div>
             <div className="flex items-start gap-4">
               <DonutChart data={moduleData} colors={CHART_COLORS} />
               <div className="space-y-0.5 text-xs flex-1 min-w-0 pt-1">
@@ -188,7 +188,7 @@ export default function FindingsChart({ findings }: Props) {
           </div>
         </div>
       ) : (
-        <div className="text-[#403d38] text-xs py-4 v-fade-in">No findings data</div>
+        <div className="text-[#403d38] text-xs py-4 v-fade-in">暂无漏洞数据</div>
       )}
     </div>
   );

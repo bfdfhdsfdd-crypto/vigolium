@@ -19,7 +19,7 @@ export default function SeverityChart({ stats }: Props) {
 
   return (
     <div className="border border-[#bbc3c4] bg-[#f6edda] p-3 h-full">
-      <div className="text-[#0078c8] text-xs font-bold mb-2">SEVERITY DISTRIBUTION</div>
+      <div className="text-[#0078c8] text-xs font-bold mb-2">严重程度分布</div>
       {loading ? (
         <div className="space-y-0.5 text-xs">
           {SEVERITY_ORDER.map((sev, i) => (
@@ -52,7 +52,7 @@ export default function SeverityChart({ stats }: Props) {
           })}
         </div>
       ) : (
-        <div className="text-[#bbc3c4] text-xs py-4 v-fade-in">No findings data</div>
+        <div className="text-[#bbc3c4] text-xs py-4 v-fade-in">暂无漏洞数据</div>
       )}
     </div>
   );

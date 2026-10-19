@@ -11,7 +11,7 @@ import type { OASTInteraction, OASTInteractionsQueryParams } from '@/api/types';
 
 import { registerAgGrid } from '@/lib/ag-grid-register';
 import { formatDate } from '@/lib/formatters';
-import { PROTOCOL_COLORS, AG_GRID_THEME } from './theme';
+import { PROTOCOL_COLORS, AG_GRID_THEME, AG_GRID_LOCALE_ZH_CN } from './theme';
 import PageShell from './PageShell';
 import OASTInteractionDetailPanel from './OASTInteractionDetailPanel';
 import Dropdown from './Dropdown';
@@ -91,9 +91,9 @@ export default function OASTInteractionsPage({ initialId }: { initialId?: number
     const succeeded = results.filter((r) => r.status === 'fulfilled').length;
     const failed = results.length - succeeded;
     if (failed === 0) {
-      toast(`Deleted ${succeeded} interaction(s)`, 'success');
+      toast(`已删除 ${succeeded} 条交互记录`, 'success');
     } else {
-      toast(`Deleted ${succeeded}, failed ${failed}`, 'error');
+      toast(`删除成功 ${succeeded} 项，失败 ${failed} 项`, 'error');
     }
     setSelectedRows([]);
     gridRef.current?.api?.deselectAll();
@@ -161,8 +161,8 @@ export default function OASTInteractionsPage({ initialId }: { initialId?: number
         <div className={`border border-[#bbc3c4] bg-[#f6edda] overflow-hidden flex flex-col ${selectedId !== null ? 'w-1/2' : 'w-full'} transition-all`}>
           <div className="px-3 py-1.5 border-b border-[#bbc3c4] flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-1.5">
-              <span className="text-[#0078c8] text-xs font-bold">OAST_INTERACTIONS</span>
-              <button onClick={() => refetch()} className="text-[#708e8e] hover:text-[#0078c8] transition-colors" title="Refresh">
+              <span className="text-[#0078c8] text-xs font-bold">OAST 交互记录</span>
+              <button onClick={() => refetch()} className="text-[#708e8e] hover:text-[#0078c8] transition-colors" title="刷新">
                 <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin' : ''}`} />
               </button>
             </div>
@@ -171,22 +171,22 @@ export default function OASTInteractionsPage({ initialId }: { initialId?: number
                 value={protocolFilter}
                 icon={<Network className="w-3 h-3" />}
                 options={[
-                  { value: '', label: 'proto:all' },
+                  { value: '', label: '协议：全部' },
                   ...['dns', 'http', 'ldap', 'smtp'].map((p) => ({ value: p, label: p })),
                 ]}
                 onChange={(v) => { setProtocolFilter(v); resetOffset(); }}
               />
               <div className="flex items-center border border-[#bbc3c4] bg-[#f6edda] focus-within:border-[#0078c8]/50">
                 <Box className="w-3 h-3 text-[#708e8e] ml-1.5 shrink-0" />
-                <input type="text" value={moduleFilter} onChange={(e) => { setModuleFilter(e.target.value); resetOffset(); }} placeholder="module..." className="bg-transparent text-[#005661] text-xs px-1.5 py-0.5 w-28 focus:outline-none" />
+                <input type="text" value={moduleFilter} onChange={(e) => { setModuleFilter(e.target.value); resetOffset(); }} placeholder="模块..." className="bg-transparent text-[#005661] text-xs px-1.5 py-0.5 w-28 focus:outline-none" />
               </div>
               <Dropdown
                 value={sortField}
                 icon={<ArrowUpDown className="w-3 h-3" />}
                 options={[
-                  { value: '', label: 'sort:default' },
-                  { value: 'interacted_at', label: 'time' },
-                  { value: 'protocol', label: 'protocol' },
+                  { value: '', label: '排序：默认' },
+                  { value: 'interacted_at', label: '时间' },
+                  { value: 'protocol', label: '协议' },
                 ]}
                 onChange={setSortField}
               />
@@ -194,14 +194,14 @@ export default function OASTInteractionsPage({ initialId }: { initialId?: number
                 value={sortOrder}
                 icon={sortOrder === 'desc' ? <ArrowDown className="w-3 h-3" /> : <ArrowUp className="w-3 h-3" />}
                 options={[
-                  { value: '', label: 'asc' },
-                  { value: 'desc', label: 'desc' },
+                  { value: '', label: '升序' },
+                  { value: 'desc', label: '降序' },
                 ]}
                 onChange={setSortOrder}
               />
               <div className="flex items-center border border-[#bbc3c4] bg-[#f6edda] focus-within:border-[#0078c8]/50">
                 <Search className="w-3 h-3 text-[#708e8e] ml-1.5 shrink-0" />
-                <input type="text" value={searchInput} onChange={(e) => { setSearchInput(e.target.value); resetOffset(); }} placeholder="search..." className="bg-transparent text-[#005661] text-xs px-1.5 py-0.5 w-36 focus:outline-none" />
+                <input type="text" value={searchInput} onChange={(e) => { setSearchInput(e.target.value); resetOffset(); }} placeholder="搜索..." className="bg-transparent text-[#005661] text-xs px-1.5 py-0.5 w-36 focus:outline-none" />
               </div>
             </div>
           </div>
@@ -228,6 +228,7 @@ export default function OASTInteractionsPage({ initialId }: { initialId?: number
               />
             ) : (
               <AgGridReact<OASTInteraction>
+                localeText={AG_GRID_LOCALE_ZH_CN}
                 ref={gridRef}
                 rowData={data?.data || []}
                 columnDefs={columnDefs}
@@ -238,7 +239,7 @@ export default function OASTInteractionsPage({ initialId }: { initialId?: number
                 onRowClicked={onRowClicked}
                 rowSelection={{ mode: 'multiRow', headerCheckbox: true, checkboxes: true, enableClickSelection: false }}
                 onSelectionChanged={onSelectionChanged}
-                overlayNoRowsTemplate='<span style="color:#bbc3c4">no interactions</span>'
+                overlayNoRowsTemplate='<span style="color:#bbc3c4">暂无交互记录</span>'
               />
             )}
           </div>

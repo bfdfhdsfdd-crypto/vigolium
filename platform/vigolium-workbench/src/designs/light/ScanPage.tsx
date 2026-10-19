@@ -37,9 +37,9 @@ const HISTORY_PAGE_SIZE = 20;
 interface HeaderRow { key: string; value: string; }
 
 const STRATEGY_META: Record<string, { title: string; desc: string; Icon: typeof Zap }> = {
-  lite:     { title: 'Quick',    desc: 'Fast surface-level scan for common issues',                Icon: Zap },
-  balanced: { title: 'Balanced', desc: 'Thorough scan with smart defaults',                       Icon: Scale },
-  deep:     { title: 'Deep',     desc: 'Exhaustive scan with full discovery and verification',     Icon: Layers },
+  lite:     { title: '快速',    desc: '快速检查常见问题',                Icon: Zap },
+  balanced: { title: '均衡', desc: '使用智能默认项进行全面扫描',                       Icon: Scale },
+  deep:     { title: '深度',     desc: '执行完整发现与验证的深度扫描',     Icon: Layers },
 };
 
 /* ─── auto-detect mode from input ─── */
@@ -113,41 +113,41 @@ function ScanDetailPanel({ scan, onClose }: { scan: Scan; onClose: () => void })
   return (
     <div className="border-l border-[#bbc3c4] flex flex-col h-full min-h-0">
       <div className="px-3 py-1.5 border-b border-[#bbc3c4] flex items-center justify-between shrink-0">
-        <span className="text-[#0078c8] text-xs font-bold">SCAN DETAILS</span>
-        <button onClick={onClose} className="text-[10px] text-[#708e8e] hover:text-[#005661]">[close]</button>
+        <span className="text-[#0078c8] text-xs font-bold">扫描详情</span>
+        <button onClick={onClose} className="text-[10px] text-[#708e8e] hover:text-[#005661]">[关闭]</button>
       </div>
       <div className="px-3 py-2 text-xs border-b border-[#bbc3c4] shrink-0 space-y-1">
         <div className="text-[#005661] break-all">
-          <span className="text-[#708e8e]">uuid:</span> {scan.uuid}
+          <span className="text-[#708e8e]">UUID：</span> {scan.uuid}
         </div>
         {scan.project_uuid && (
           <div className="text-[#005661] break-all">
-            <span className="text-[#708e8e]">project_uuid:</span> {scan.project_uuid}
+            <span className="text-[#708e8e]">项目 UUID：</span> {scan.project_uuid}
           </div>
         )}
         <div className="flex flex-wrap gap-x-4 gap-y-0.5">
-          <span><span className="text-[#708e8e]">status:</span> <span className="font-bold uppercase" style={{ color: statusColor(scan.status) }}>{scan.status}</span></span>
-          <span><span className="text-[#708e8e]">name:</span> <span className="text-[#005661]">{scan.name || '-'}</span></span>
-          <span><span className="text-[#708e8e]">mode:</span> <span className="text-[#0078c8]">{scan.scan_mode || '-'}</span></span>
-          <span><span className="text-[#708e8e]">source:</span> <span className="text-[#005661] font-semibold">{scan.scan_source || '-'}</span></span>
-          <span><span className="text-[#708e8e]">findings:</span> <span style={{ color: scan.total_findings > 0 ? '#b8860b' : '#708e8e' }}>{scan.total_findings}</span></span>
-          <span><span className="text-[#708e8e]">processed:</span> <span className="text-[#00b368]">{scan.processed_count}</span></span>
+          <span><span className="text-[#708e8e]">状态：</span> <span className="font-bold uppercase" style={{ color: statusColor(scan.status) }}>{scan.status}</span></span>
+          <span><span className="text-[#708e8e]">名称：</span> <span className="text-[#005661]">{scan.name || '-'}</span></span>
+          <span><span className="text-[#708e8e]">模式：</span> <span className="text-[#0078c8]">{scan.scan_mode || '-'}</span></span>
+          <span><span className="text-[#708e8e]">来源：</span> <span className="text-[#005661] font-semibold">{scan.scan_source || '-'}</span></span>
+          <span><span className="text-[#708e8e]">漏洞数：</span> <span style={{ color: scan.total_findings > 0 ? '#b8860b' : '#708e8e' }}>{scan.total_findings}</span></span>
+          <span><span className="text-[#708e8e]">已处理：</span> <span className="text-[#00b368]">{scan.processed_count}</span></span>
         </div>
         <div className="flex flex-wrap gap-x-4 gap-y-0.5">
-          <span><span className="text-[#708e8e]">started:</span> <span className="text-[#005661]">{scan.started_at ? formatDate(scan.started_at) : '-'}</span></span>
-          <span><span className="text-[#708e8e]">finished:</span> <span className="text-[#005661]">{scan.finished_at ? formatDate(scan.finished_at) : '-'}</span></span>
-          <span><span className="text-[#708e8e]">created:</span> <span className="text-[#005661]">{scan.created_at ? formatDate(scan.created_at) : '-'}</span></span>
+          <span><span className="text-[#708e8e]">开始时间：</span> <span className="text-[#005661]">{scan.started_at ? formatDate(scan.started_at) : '-'}</span></span>
+          <span><span className="text-[#708e8e]">结束时间：</span> <span className="text-[#005661]">{scan.finished_at ? formatDate(scan.finished_at) : '-'}</span></span>
+          <span><span className="text-[#708e8e]">创建时间：</span> <span className="text-[#005661]">{scan.created_at ? formatDate(scan.created_at) : '-'}</span></span>
         </div>
         {scan.modules && (
           <div>
             <div className="flex items-center gap-2">
-              <span className="text-[#708e8e]">modules:</span>
+              <span className="text-[#708e8e]">模块：</span>
               <span className="text-[#0078c8] text-[10px]">{scan.modules === 'all' ? 'all' : scan.modules.split(',').length + ' modules'}</span>
               <button
                 onClick={() => { navigator.clipboard.writeText(scan.modules!); setModulesCopied(true); setTimeout(() => setModulesCopied(false), 1500); }}
                 className="px-1.5 py-0.5 text-[10px] border border-[#bbc3c4] text-[#708e8e] hover:text-[#005661]"
               >
-                {modulesCopied ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />copied!</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />copy</>}
+                {modulesCopied ? <><Check size={10} className="inline-block mr-0.5 -mt-px" />已复制！</> : <><Copy size={10} className="inline-block mr-0.5 -mt-px" />复制</>}
               </button>
             </div>
             <textarea readOnly rows={3} value={scan.modules} className="mt-0.5 w-full bg-[#ede4d1] border border-[#bbc3c4] text-[#005661] text-xs p-1.5 resize-none focus:outline-none" />
@@ -155,14 +155,14 @@ function ScanDetailPanel({ scan, onClose }: { scan: Scan; onClose: () => void })
         )}
       </div>
       <div className="px-3 py-1.5 border-b border-[#bbc3c4] shrink-0">
-        <span className="text-[#0078c8] text-xs font-bold">LOGS</span>
+        <span className="text-[#0078c8] text-xs font-bold">日志</span>
         <span className="text-[#bbc3c4] text-[10px] ml-2">{logText !== undefined ? 'runtime.log tail' : `${logs.length} entries`}</span>
       </div>
       <div ref={tail.ref} onScroll={tail.onScroll} className="bg-[#ede4d1] overflow-y-auto font-mono text-[11px] leading-relaxed flex-1 min-h-0">
         {logText ? (
           <pre className="px-3 py-2 whitespace-pre-wrap break-all text-[#005661]">{logText}</pre>
         ) : logs.length === 0 ? (
-          <div className="px-3 py-2 text-[#bbc3c4]">no logs</div>
+          <div className="px-3 py-2 text-[#bbc3c4]">暂无日志</div>
         ) : (
           logs.map((log: ScanLog) => (
             <div key={log.id} className="px-3 py-0.5 hover:bg-[#ede4d1] flex gap-2">
@@ -187,22 +187,22 @@ function ScanActions({ scan, onStop, onDelete, onPause, onResume }: { scan: Scan
     <div className="flex items-center gap-1">
       {scan.status === 'running' && (
         <>
-          <button onClick={(e) => { e.stopPropagation(); onPause(scan.uuid); }} className="text-[10px] text-[#b8860b] hover:underline">[pause]</button>
-          <button onClick={(e) => { e.stopPropagation(); onStop(scan.uuid); }} className="text-[10px] text-[#e34e1c] hover:underline">[stop]</button>
+          <button onClick={(e) => { e.stopPropagation(); onPause(scan.uuid); }} className="text-[10px] text-[#b8860b] hover:underline">[暂停]</button>
+          <button onClick={(e) => { e.stopPropagation(); onStop(scan.uuid); }} className="text-[10px] text-[#e34e1c] hover:underline">[停止]</button>
         </>
       )}
       {scan.status === 'paused' && (
         <>
-          <button onClick={(e) => { e.stopPropagation(); onResume(scan.uuid); }} className="text-[10px] text-[#00b368] hover:underline">[resume]</button>
-          <button onClick={(e) => { e.stopPropagation(); onStop(scan.uuid); }} className="text-[10px] text-[#e34e1c] hover:underline">[stop]</button>
+          <button onClick={(e) => { e.stopPropagation(); onResume(scan.uuid); }} className="text-[10px] text-[#00b368] hover:underline">[继续]</button>
+          <button onClick={(e) => { e.stopPropagation(); onStop(scan.uuid); }} className="text-[10px] text-[#e34e1c] hover:underline">[停止]</button>
         </>
       )}
       {!confirmDel ? (
-        <button onClick={() => setConfirmDel(true)} className="text-[10px] text-[#708e8e] hover:text-[#e34e1c]">[del]</button>
+        <button onClick={() => setConfirmDel(true)} className="text-[10px] text-[#708e8e] hover:text-[#e34e1c]">[删除]</button>
       ) : (
         <span className="flex items-center gap-1">
-          <button onClick={() => { onDelete(scan.uuid); setConfirmDel(false); }} className="text-[10px] text-[#e34e1c] hover:underline">[confirm]</button>
-          <button onClick={() => setConfirmDel(false)} className="text-[10px] text-[#708e8e] hover:underline">[cancel]</button>
+          <button onClick={() => { onDelete(scan.uuid); setConfirmDel(false); }} className="text-[10px] text-[#e34e1c] hover:underline">[确认]</button>
+          <button onClick={() => setConfirmDel(false)} className="text-[10px] text-[#708e8e] hover:underline">[取消]</button>
         </span>
       )}
     </div>
@@ -481,14 +481,14 @@ export default function ScanPage() {
       {/* ════════════════════════════════════════ NEW SCAN ════════════════════════════════════════ */}
       <div className="border border-[#bbc3c4] bg-[#f6edda]">
         <div className="px-3 py-1.5 border-b border-[#bbc3c4]">
-          <span className="text-[#0078c8] text-xs font-bold">NEW SCAN</span>
+          <span className="text-[#0078c8] text-xs font-bold">新建扫描</span>
         </div>
 
         <div className="p-4 space-y-4">
           {/* 1. Main input with detected mode badge */}
           <div>
             <div className="flex items-center gap-1.5 mb-0.5">
-              <label className="text-[#708e8e] text-xs">Target</label>
+              <label className="text-[#708e8e] text-xs">扫描目标</label>
               <span className="text-[10px]" style={{ color: MODE_BADGE_COLORS[detectedMode] }}>
                 (type: {MODE_LABELS[detectedMode].toLowerCase()})
               </span>
@@ -498,7 +498,7 @@ export default function ScanPage() {
                   <span className="text-[10px]" style={{ color: '#c49000' }}>
                     (type: {MODE_LABELS[modeOverride].toLowerCase()})
                   </span>
-                  <button onClick={() => setModeOverride(null)} className="text-[10px] text-[#708e8e] hover:text-[#005661]">[auto]</button>
+                  <button onClick={() => setModeOverride(null)} className="text-[10px] text-[#708e8e] hover:text-[#005661]">[自动]</button>
                 </>
               )}
               <div className="relative">
@@ -533,7 +533,7 @@ export default function ScanPage() {
               value={input}
               onChange={(e) => setInput(e.target.value)}
               rows={Math.max(4, Math.min(30, input.split('\n').length + 1))}
-              placeholder="Paste URL, targets, raw HTTP request, or repo URL..."
+              placeholder="粘贴 URL、目标列表、原始 HTTP 请求或代码仓库 URL..."
               className={`${textareaClass} text-sm`}
             />
           </div>
@@ -596,7 +596,7 @@ export default function ScanPage() {
                 NO_PASSIVE: {noPassive ? 'ON' : 'OFF'}
               </button>
             )}
-            <button onClick={() => setAdvancedOpen(v => !v)} className={`px-2 py-1 text-xs border transition-colors shrink-0 ${advancedOpen ? 'border-[#e34e1c]/50 text-[#e34e1c] bg-[#e34e1c]/10' : 'border-[#bbc3c4] text-[#708e8e] hover:text-[#005661]'}`}>ADVANCED</button>
+            <button onClick={() => setAdvancedOpen(v => !v)} className={`px-2 py-1 text-xs border transition-colors shrink-0 ${advancedOpen ? 'border-[#e34e1c]/50 text-[#e34e1c] bg-[#e34e1c]/10' : 'border-[#bbc3c4] text-[#708e8e] hover:text-[#005661]'}`}>高级选项</button>
           </div>
 
           {advancedOpen && (
@@ -606,11 +606,11 @@ export default function ScanPage() {
                 <>
                   <div className="flex gap-2 items-end">
                     <div className="w-28">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">METHOD</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">请求方法</label>
                       <Dropdown value={method} onChange={setMethod} options={METHODS.map(m => ({ value: m, label: m }))} />
                     </div>
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">BODY (optional)</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">请求体（可选）</label>
                       <input type="text" value={body} onChange={(e) => setBody(e.target.value)} placeholder='{"key": "value"}' className={inputClass} />
                     </div>
                   </div>
@@ -641,7 +641,7 @@ export default function ScanPage() {
                     )}
                     <p className="text-[10px] text-[#708e8e] mt-1">.zip, .tar.gz, .tgz, .tar -- or drop a folder (auto-zipped) -- max 500 MB</p>
                     {uploadRepo.isSuccess && (
-                      <p className="text-[10px] text-[#00b368] mt-1">uploaded -- source path set</p>
+                      <p className="text-[10px] text-[#00b368] mt-1">已上传，源码路径已设置</p>
                     )}
                     {uploadRepo.isError && (
                       <p className="text-[10px] text-[#e34e1c] mt-1">upload failed: {(uploadRepo.error as Error).message}</p>
@@ -649,11 +649,11 @@ export default function ScanPage() {
                   </div>
                   <div className="flex gap-2">
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">SOURCE (local / uploaded)</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">源码路径（本地或已上传）</label>
                       <input type="text" value={repoPath} onChange={(e) => { setRepoPath(e.target.value); if (e.target.value) setRepoUrl(''); }} placeholder="/path/to/repo" className={inputClass} />
                     </div>
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">REPO URL (git URL)</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">代码仓库 URL（Git 地址）</label>
                       <input type="text" value={repoUrl} onChange={(e) => { setRepoUrl(e.target.value); if (e.target.value) setRepoPath(''); }} placeholder="https://github.com/org/repo" className={inputClass} />
                     </div>
                   </div>
@@ -664,12 +664,12 @@ export default function ScanPage() {
               {/* Shared advanced fields: modules, tuning, headers */}
               <div className="flex gap-2">
                 <div className="flex-1">
-                  <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">MODULES <span className="normal-case font-normal">(blank = all)</span></label>
-                  <input type="text" value={modules} onChange={(e) => setModules(e.target.value)} placeholder="xss_scanner,sqli_error_based" className={inputClass} />
+                  <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">扫描模块 <span className="normal-case font-normal">(留空表示全部)</span></label>
+                  <input type="text" value={modules} onChange={(e) => setModules(e.target.value)} placeholder="模块 ID，例如 xss_scanner,sqli_error_based" className={inputClass} />
                 </div>
                 <div className="flex-1">
-                  <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">MODULE_TAGS <span className="normal-case font-normal">(blank = all)</span></label>
-                  <input type="text" value={moduleTags} onChange={(e) => setModuleTags(e.target.value)} placeholder="xss,light" className={inputClass} />
+                  <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">模块标签 <span className="normal-case font-normal">(留空表示全部)</span></label>
+                  <input type="text" value={moduleTags} onChange={(e) => setModuleTags(e.target.value)} placeholder="模块标签，例如 xss,light" className={inputClass} />
                 </div>
               </div>
 
@@ -677,40 +677,40 @@ export default function ScanPage() {
                 <>
                   <div className="flex gap-2">
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">CONCURRENCY</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">并发数</label>
                       <input type="number" value={concurrency} onChange={(e) => setConcurrency(e.target.value)} placeholder="10" className={inputClass} />
                     </div>
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">TIMEOUT</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">超时时间</label>
                       <input type="text" value={timeout} onChange={(e) => setTimeout_(e.target.value)} placeholder="30s" className={inputClass} />
                     </div>
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">MAX_PER_HOST</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">单主机最大并发数</label>
                       <input type="number" value={maxPerHost} onChange={(e) => setMaxPerHost(e.target.value)} placeholder="5" className={inputClass} />
                     </div>
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">RATE_LIMIT</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">速率限制</label>
                       <input type="number" value={rateLimit} onChange={(e) => setRateLimit(e.target.value)} placeholder="100" className={inputClass} />
                     </div>
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">MAX_DURATION</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">最长扫描时间</label>
                       <input type="text" value={maxDuration} onChange={(e) => setMaxDuration(e.target.value)} placeholder="30m" className={inputClass} />
                     </div>
                   </div>
                   <div className="flex gap-2">
                     {activeMode === 'full_scan' && (
                       <div className="w-36">
-                        <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">SCOPE_ORIGIN</label>
+                        <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">范围来源</label>
                         <Dropdown value={scopeOrigin} onChange={setScopeOrigin} options={SCOPE_ORIGINS.map(s => ({ value: s, label: s || '(default)' }))} />
                       </div>
                     )}
                     <div className="w-36">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">HEURISTICS</label>
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">启发式检测</label>
                       <Dropdown value={heuristics} onChange={setHeuristics} options={HEURISTICS.map(h => ({ value: h, label: h || '(default)' }))} />
                     </div>
                     <div className="flex-1">
-                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">SCANNING_PROFILE</label>
-                      <input type="text" value={scanProfile} onChange={(e) => setScanProfile(e.target.value)} placeholder="profile name" className={inputClass} />
+                      <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">扫描配置</label>
+                      <input type="text" value={scanProfile} onChange={(e) => setScanProfile(e.target.value)} placeholder="配置名称" className={inputClass} />
                     </div>
                   </div>
                 </>
@@ -718,16 +718,16 @@ export default function ScanPage() {
 
               {/* Headers */}
               <div>
-                <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">HEADERS</label>
+                <label className="text-[#708e8e] text-[10px] uppercase block mb-0.5">请求头</label>
                 <div className="space-y-1">
                   {headers.map((h, i) => (
                     <div key={i} className="flex gap-1 items-center">
-                      <input type="text" value={h.key} onChange={(e) => updateHeader(i, 'key', e.target.value)} placeholder="Header-Name" className={`${inputClass} flex-1`} />
-                      <input type="text" value={h.value} onChange={(e) => updateHeader(i, 'value', e.target.value)} placeholder="value" className={`${inputClass} flex-1`} />
+                      <input type="text" value={h.key} onChange={(e) => updateHeader(i, 'key', e.target.value)} placeholder="请求头名称" className={`${inputClass} flex-1`} />
+                      <input type="text" value={h.value} onChange={(e) => updateHeader(i, 'value', e.target.value)} placeholder="值" className={`${inputClass} flex-1`} />
                       <button onClick={() => removeHeader(i)} className="text-[#708e8e] hover:text-[#e34e1c] text-xs px-1">x</button>
                     </div>
                   ))}
-                  <button onClick={addHeader} className="text-xs text-[#708e8e] hover:text-[#0078c8]">[+ header]</button>
+                  <button onClick={addHeader} className="text-xs text-[#708e8e] hover:text-[#0078c8]">［+ 添加请求头］</button>
                 </div>
               </div>
             </div>
@@ -736,14 +736,14 @@ export default function ScanPage() {
           {/* 6. Result display */}
           {mutation.isSuccess && mutation.data && (
             <div className="border border-[#bbc3c4] p-2 text-xs flex items-center gap-4 flex-wrap">
-              <span className="text-[#0078c8] font-bold">RESULT</span>
-              <span><span className="text-[#708e8e]">scan_uuid:</span> <span className="text-[#005661]">{mutation.data.scan_uuid}</span></span>
-              <span><span className="text-[#708e8e]">status:</span> <span className="text-[#005661]">{mutation.data.status}</span></span>
-              {mutation.data.scan_mode && <span><span className="text-[#708e8e]">mode:</span> <span className="text-[#005661]">{mutation.data.scan_mode}</span></span>}
-              {mutation.data.targets_count != null && <span><span className="text-[#708e8e]">targets:</span> <span className="text-[#005661]">{mutation.data.targets_count}</span></span>}
-              {mutation.data.records_to_scan != null && <span><span className="text-[#708e8e]">records:</span> <span className="text-[#005661]">{mutation.data.records_to_scan}</span></span>}
-              {mutation.data.source && <span><span className="text-[#708e8e]">source:</span> <span className="text-[#005661]">{mutation.data.source}</span></span>}
-              {mutation.data.message && <span><span className="text-[#708e8e]">msg:</span> <span className="text-[#005661]">{mutation.data.message}</span></span>}
+              <span className="text-[#0078c8] font-bold">扫描结果</span>
+              <span><span className="text-[#708e8e]">扫描 UUID：</span> <span className="text-[#005661]">{mutation.data.scan_uuid}</span></span>
+              <span><span className="text-[#708e8e]">状态：</span> <span className="text-[#005661]">{mutation.data.status}</span></span>
+              {mutation.data.scan_mode && <span><span className="text-[#708e8e]">模式：</span> <span className="text-[#005661]">{mutation.data.scan_mode}</span></span>}
+              {mutation.data.targets_count != null && <span><span className="text-[#708e8e]">目标数：</span> <span className="text-[#005661]">{mutation.data.targets_count}</span></span>}
+              {mutation.data.records_to_scan != null && <span><span className="text-[#708e8e]">记录数：</span> <span className="text-[#005661]">{mutation.data.records_to_scan}</span></span>}
+              {mutation.data.source && <span><span className="text-[#708e8e]">来源：</span> <span className="text-[#005661]">{mutation.data.source}</span></span>}
+              {mutation.data.message && <span><span className="text-[#708e8e]">消息：</span> <span className="text-[#005661]">{mutation.data.message}</span></span>}
             </div>
           )}
           {mutation.isError && (
@@ -755,25 +755,25 @@ export default function ScanPage() {
       {/* ════════════════════════════════════════ SCAN HISTORY ════════════════════════════════════════ */}
       <div className="border border-[#bbc3c4] bg-[#f6edda] overflow-hidden mt-3">
         <div className="px-3 py-1.5 border-b border-[#bbc3c4]">
-          <span className="text-[#0078c8] text-xs font-bold">SCAN HISTORY</span>
+          <span className="text-[#0078c8] text-xs font-bold">扫描历史</span>
         </div>
         <div className="flex" style={{ minHeight: selectedScan ? 420 : undefined }}>
           <div className={`overflow-x-auto ${selectedScan ? 'w-1/2' : 'w-full'}`}>
             <table className="w-full text-xs">
               <thead>
                 <tr className="border-b border-[#bbc3c4]">
-                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">STATUS</th>
-                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">NAME</th>
-                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">MODE / SOURCE</th>
-                  <th className="text-right px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">FINDINGS</th>
-                  <th className="text-right px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">PROCESSED</th>
-                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">STARTED</th>
-                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">ACTIONS</th>
+                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">状态</th>
+                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">名称</th>
+                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">模式 / 来源</th>
+                  <th className="text-right px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">漏洞数</th>
+                  <th className="text-right px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">已处理</th>
+                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">开始时间</th>
+                  <th className="text-left px-3 py-1.5 text-[#708e8e] text-[10px] uppercase font-normal">操作</th>
                 </tr>
               </thead>
               <tbody>
-                {scansLoading && <tr><td colSpan={7} className="px-3 py-4 text-center text-[#708e8e]">loading...</td></tr>}
-                {!scansLoading && (!scansData?.data || scansData.data.length === 0) && <tr><td colSpan={7} className="px-3 py-4 text-center text-[#bbc3c4]">no scans</td></tr>}
+                {scansLoading && <tr><td colSpan={7} className="px-3 py-4 text-center text-[#708e8e]">加载中...</td></tr>}
+                {!scansLoading && (!scansData?.data || scansData.data.length === 0) && <tr><td colSpan={7} className="px-3 py-4 text-center text-[#bbc3c4]">暂无扫描记录</td></tr>}
                 {scansData?.data?.map((scan) => (
                   <tr key={scan.uuid} onClick={() => setExpandedScanUuid((prev) => prev === scan.uuid ? null : scan.uuid)} className={`border-b border-[#bbc3c4]/50 hover:bg-[#ede4d1] transition-colors cursor-pointer ${expandedScanUuid === scan.uuid ? 'bg-[#ede4d1]' : ''}`}>
                     <td className="px-3 py-1.5"><StatusBadge status={scan.status} /></td>

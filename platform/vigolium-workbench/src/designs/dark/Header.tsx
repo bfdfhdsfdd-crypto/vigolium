@@ -31,7 +31,7 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
   // sign-in by ProjectContext). The legacy "ALL PROJECTS" option is kept only
   // for static/workbench mode where there is no per-user scoping.
   const isAllProjects = !isStaticBuild ? false : !projectUUID;
-  const fallbackLabel = isStaticBuild ? 'ALL PROJECTS' : 'no project selected';
+  const fallbackLabel = isStaticBuild ? '全部项目' : '未选择项目';
   const displayName = currentProject?.name ?? fallbackLabel;
 
   useEffect(() => {
@@ -84,20 +84,20 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
       <div className="px-2 md:px-4 min-h-8 py-1 flex flex-wrap items-center justify-between text-xs gap-y-1">
         <div className="flex items-center gap-2 md:gap-4">
           <span className="font-bold" style={{ color: 'var(--v-accent)' }}>
-            {isStaticBuild ? '> VIGOLIUM' : '> VIGOLIUM CLOUD CONSOLE'}
+            {isStaticBuild ? '> VIGOLIUM' : '> VIGOLIUM 云控制台'}
           </span>
           {!isStaticBuild && process.env.NEXT_PUBLIC_ENTERPRISE_LABEL && (
             <span style={{ color: '#ff8c00' }}>[{process.env.NEXT_PUBLIC_ENTERPRISE_LABEL}]</span>
           )}
           {isStaticBuild && serverInfo && (
-            <span className="hidden sm:inline" style={{ color: 'var(--v-text-muted)' }}>[<span style={{ color: '#ff8c00' }}>workbench</span> {serverInfo.version}]</span>
+            <span className="hidden sm:inline" style={{ color: 'var(--v-text-muted)' }}>[<span style={{ color: '#ff8c00' }}>工作台</span> {serverInfo.version}]</span>
           )}
           <div className="relative" ref={dropdownRef}>
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="v-header-link transition-colors"
             >
-              {isAllProjects && <ShieldCheck className="w-3 h-3 inline mr-1" />}[PROJECT: <span style={{ color: '#fde68a' }}>{displayName}</span> ▼]
+              {isAllProjects && <ShieldCheck className="w-3 h-3 inline mr-1" />}[项目：<span style={{ color: '#fde68a' }}>{displayName}</span> ▼]
             </button>
             {dropdownOpen && (
               <div className="absolute top-full left-0 mt-1 min-w-[200px] z-50 shadow-lg border" style={{ backgroundColor: 'var(--v-surface)', borderColor: 'var(--v-border)' }}>
@@ -107,7 +107,7 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
                     className="flex items-center gap-1.5 w-full text-left px-3 py-1.5 v-dropdown-item"
                     style={{ color: !projectUUID ? 'var(--v-success)' : 'var(--v-text)' }}
                   >
-                    <ShieldCheck className="w-3 h-3" /> ALL PROJECTS
+                    <ShieldCheck className="w-3 h-3" /> 全部项目
                   </button>
                 )}
                 {projects.map((p) => (
@@ -128,11 +128,11 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
                         value={newName}
                         onChange={(e) => setNewName(e.target.value)}
                         onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
-                        placeholder="project name"
+                        placeholder="项目名称"
                         className="px-1.5 py-0.5 text-xs flex-1 outline-none border"
                         style={{ backgroundColor: 'var(--v-bg)', borderColor: 'var(--v-border)', color: 'var(--v-text)' }}
                       />
-                      <button onClick={handleCreate} style={{ color: 'var(--v-success)' }}>OK</button>
+                      <button onClick={handleCreate} style={{ color: 'var(--v-success)' }}>确定</button>
                     </div>
                   ) : (
                     <button
@@ -140,7 +140,7 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
                       className="block w-full text-left px-3 py-1.5 v-dropdown-item"
                       style={{ color: 'var(--v-secondary)' }}
                     >
-                      + New Project
+                      + 新建项目
                     </button>
                   )}
                   <a
@@ -149,7 +149,7 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
                     className="flex items-center gap-1.5 w-full text-left px-3 py-1.5 v-dropdown-item"
                     style={{ color: 'var(--v-accent)' }}
                   >
-                    <Menu className="w-3 h-3" /> Select Project
+                    <Menu className="w-3 h-3" /> 选择项目
                   </a>
                 </div>
               </div>
@@ -158,7 +158,7 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
         </div>
         <div className="flex items-center gap-2 md:gap-4">
           {serverInfo?.proxy_addr && (
-            <span className="hidden md:inline" style={{ color: 'var(--v-text-muted)' }}>proxy:{serverInfo.proxy_addr}</span>
+            <span className="hidden md:inline" style={{ color: 'var(--v-text-muted)' }}>代理：{serverInfo.proxy_addr}</span>
           )}
           {toasts.map((t) => {
             const toastColor = t.type === 'success' ? 'var(--v-success)' : t.type === 'error' ? 'var(--v-error)' : 'var(--v-secondary)';
@@ -178,11 +178,11 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
           {isStaticBuild && (
             <>
               <span style={{ color: isConnected ? 'var(--v-success)' : 'var(--v-error)' }}>
-                {isConnected ? '[CONNECTED]' : '[OFFLINE]'}
+                {isConnected ? '[已连接]' : '[离线]'}
               </span>
               {isConnected && getUserInfo() && (
                 <span className="hidden lg:inline" style={{ color: 'var(--v-secondary)' }}>
-                  [Login as <span style={{ color: '#fde68a' }}>{getUserInfo()!.name}</span>]
+                  [登录用户：<span style={{ color: '#fde68a' }}>{getUserInfo()!.name}</span>]
                 </span>
               )}
             </>
@@ -195,14 +195,14 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
                 <Loader2
                   className="w-3.5 h-3.5 animate-spin"
                   style={{ color: 'var(--v-text-muted)' }}
-                  aria-label="Connecting to scanner server"
+                  aria-label="正在连接扫描器服务器"
                 />
               )}
               {isConnected && currentUser && !isDemoUser && (
                 <div className="flex items-center gap-2 md:gap-4 animate-header-fade">
-                  <a href="/billing" className="hidden md:inline-flex items-center gap-1" style={{ color: 'var(--v-accent)' }} title="Credits">
+                  <a href="/billing" className="hidden md:inline-flex items-center gap-1" style={{ color: 'var(--v-accent)' }} title="额度">
                     <Coins className="w-3 h-3" />
-                    <span>Credits:</span>{' '}
+                    <span>额度：</span>{' '}
                     {creditBalance ? (
                       <span className="font-bold">{displayedCredits.toLocaleString()}</span>
                     ) : (
@@ -210,12 +210,12 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
                     )}
                   </a>
                   {currentUser.organization && (
-                    <Link href="/settings/team" className="hidden lg:inline" style={{ color: 'var(--v-text-muted)' }} title="Team">
+                    <Link href="/settings/team" className="hidden lg:inline" style={{ color: 'var(--v-text-muted)' }} title="团队">
                       [{currentUser.organization.name}]
                     </Link>
                   )}
                   <Link href="/settings" className="hidden lg:inline" style={{ color: 'var(--v-secondary)' }}>
-                    [Login as <span style={{ color: '#fde68a' }}>{currentUser.name}</span>]
+                    [登录用户：<span style={{ color: '#fde68a' }}>{currentUser.name}</span>]
                   </Link>
                 </div>
               )}
@@ -230,7 +230,7 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
                       backgroundColor: 'color-mix(in srgb, var(--v-accent) 8%, transparent)',
                     }}
                   >
-                    [Open-source Audit Showcases]
+                    [开源审计示例]
                   </a>
                   <span
                     className="hidden md:inline-flex items-center border px-2 py-0.5"
@@ -241,11 +241,11 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
                     }}
                     title={
                       (demoLabel
-                        ? `demo_key: ${demoLabel}${currentUser?.demo_expires ? ` · expires ${currentUser.demo_expires}` : ''}`
-                        : 'demo session') + '\nData may be redacted or truncated in demo mode'
+                        ? `演示密钥：${demoLabel}${currentUser?.demo_expires ? ` · 到期时间 ${currentUser.demo_expires}` : ''}`
+                        : '演示会话') + '\n演示模式下的数据可能已脱敏或截断'
                     }
                   >
-                    [Demo preview · read-only]
+                    [演示预览 · 只读]
                   </span>
                 </div>
               )}
@@ -259,16 +259,16 @@ export default function Header({ serverInfo, isConnected }: HeaderProps) {
               className="v-header-btn-danger transition-colors inline-flex items-center gap-1.5 disabled:opacity-70 disabled:cursor-wait"
             >
               {loggingOut ? (
-                <><Loader2 className="w-3 h-3 animate-spin" /> Logging out…</>
+                <><Loader2 className="w-3 h-3 animate-spin" /> 正在退出…</>
               ) : (
-                isDemoUser ? '[EXIT DEMO]' : '[LOG OUT]'
+                isDemoUser ? '[退出演示]' : '[退出登录]'
               )}
             </button>
           )}
           <button
             onClick={toggleTheme}
             className="v-header-btn transition-colors"
-            title="Toggle theme"
+            title="切换主题"
           >
             <Sun className="w-3.5 h-3.5" />
           </button>

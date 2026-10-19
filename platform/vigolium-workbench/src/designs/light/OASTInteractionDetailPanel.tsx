@@ -30,11 +30,11 @@ export default function OASTInteractionDetailPanel({ id, onClose, onDelete, isDe
         <span className="text-[#0078c8] text-xs font-bold truncate mr-2">OAST #{id}</span>
         <div className="flex items-center gap-1 shrink-0">
           {!confirmDel ? (
-            <button onClick={() => setConfirmDel(true)} className="text-[#708e8e] hover:text-[#e34e1c] text-xs px-1" disabled={isDeleting}>[del]</button>
+            <button onClick={() => setConfirmDel(true)} className="text-[#708e8e] hover:text-[#e34e1c] text-xs px-1" disabled={isDeleting}>[删除]</button>
           ) : (
             <>
               <button onClick={() => { onDelete(id); setConfirmDel(false); }} className="text-[#e34e1c] hover:underline text-xs px-1" disabled={isDeleting}>{isDeleting ? '...' : '[confirm]'}</button>
-              <button onClick={() => setConfirmDel(false)} className="text-[#708e8e] hover:underline text-xs px-1">[cancel]</button>
+              <button onClick={() => setConfirmDel(false)} className="text-[#708e8e] hover:underline text-xs px-1">[取消]</button>
             </>
           )}
           <button onClick={onClose} className="text-[#708e8e] hover:text-[#e34e1c] text-xs px-1">[x]</button>
@@ -42,18 +42,18 @@ export default function OASTInteractionDetailPanel({ id, onClose, onDelete, isDe
       </div>
 
       {isLoading && (
-        <div className="p-3 text-xs text-[#708e8e]">loading...</div>
+        <div className="p-3 text-xs text-[#708e8e]">加载中...</div>
       )}
 
       {isError && (
-        <div className="p-3 text-xs text-[#e34e1c]">failed to load interaction</div>
+        <div className="p-3 text-xs text-[#e34e1c]">加载交互记录失败</div>
       )}
 
       {interaction && (
         <div className="p-3 space-y-3 text-xs">
           {/* Protocol */}
           <div>
-            <span className="text-[#708e8e]">protocol: </span>
+            <span className="text-[#708e8e]">协议：</span>
             <span className="font-bold" style={{ color: PROTOCOL_COLORS[interaction.protocol?.toLowerCase()] || '#708e8e' }}>
               {interaction.protocol}
             </span>
@@ -68,7 +68,7 @@ export default function OASTInteractionDetailPanel({ id, onClose, onDelete, isDe
           {/* Q-Type */}
           {interaction.q_type && (
             <div>
-              <span className="text-[#708e8e]">q_type: </span>
+              <span className="text-[#708e8e]">查询类型：</span>
               <span className="text-[#005661]">{interaction.q_type}</span>
             </div>
           )}
@@ -85,13 +85,13 @@ export default function OASTInteractionDetailPanel({ id, onClose, onDelete, isDe
           <div className="space-y-0.5 text-[#708e8e]">
             {interaction.remote_address && <div>remote_address: <span className="text-[#005661]">{interaction.remote_address}</span></div>}
             <div>interacted_at: <span className="text-[#005661]">{formatDate(interaction.interacted_at)}</span></div>
-            {interaction.scan_uuid && <div>scan_uuid: <span className="text-[#005661]">{interaction.scan_uuid}</span></div>}
+            {interaction.scan_uuid && <div>扫描 UUID：<span className="text-[#005661]">{interaction.scan_uuid}</span></div>}
           </div>
 
           {/* Raw Request */}
           {interaction.raw_request && (
             <div>
-              <div className="text-[#708e8e] mb-0.5">raw_request:</div>
+              <div className="text-[#708e8e] mb-0.5">原始请求：</div>
               <pre className="bg-[#ede4d1] border border-[#bbc3c4] p-2 overflow-x-auto text-[#005661] whitespace-pre-wrap break-all max-h-64 overflow-y-auto">
                 {safeAtob(interaction.raw_request)}
               </pre>
@@ -101,7 +101,7 @@ export default function OASTInteractionDetailPanel({ id, onClose, onDelete, isDe
           {/* Raw Response */}
           {interaction.raw_response && (
             <div>
-              <div className="text-[#708e8e] mb-0.5">raw_response:</div>
+              <div className="text-[#708e8e] mb-0.5">原始响应：</div>
               <pre className="bg-[#ede4d1] border border-[#bbc3c4] p-2 overflow-x-auto text-[#005661] whitespace-pre-wrap break-all max-h-64 overflow-y-auto">
                 {safeAtob(interaction.raw_response)}
               </pre>

@@ -75,8 +75,8 @@ export default function ModulesPage() {
       <div className="border border-[#bbc3c4] bg-[#f6edda] overflow-hidden">
         <div className="px-3 py-1.5 border-b border-[#bbc3c4] flex items-center justify-between flex-wrap gap-2">
           <div className="flex items-center gap-1.5">
-            <span className="text-[#0078c8] text-xs font-bold">MODULES</span>
-            <button onClick={() => refetch()} className="text-[#708e8e] hover:text-[#0078c8] transition-colors" title="Refresh">
+            <span className="text-[#0078c8] text-xs font-bold">扫描模块</span>
+            <button onClick={() => refetch()} className="text-[#708e8e] hover:text-[#0078c8] transition-colors" title="刷新">
               <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin' : ''}`} />
             </button>
           </div>
@@ -123,7 +123,7 @@ export default function ModulesPage() {
                 type="text"
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="search..."
+                placeholder="搜索..."
                 className="bg-transparent text-[#005661] text-xs px-1.5 py-0.5 w-40 focus:outline-none"
               />
             </div>
@@ -165,7 +165,7 @@ export default function ModulesPage() {
               columns={['24px', '220px', '40%', '50px', '120px', '60px', '52px']}
             />
           ) : sorted.length === 0 ? (
-            <div className="px-3 py-4 text-[#8a9e9e] text-xs">no modules found</div>
+            <div className="px-3 py-4 text-[#8a9e9e] text-xs">未找到模块</div>
           ) : (
             <div className="divide-y divide-[#d4e8e2]">
               {sorted.map((mod) => (
@@ -204,14 +204,14 @@ export default function ModulesPage() {
                     <div className="px-3 pb-3 pl-12 text-xs space-y-2 bg-[#ede4d1]/50">
                       {/* Metadata row */}
                       <div className="flex items-center gap-4 text-[#708e8e]">
-                        <span>type: <span className="text-[#004d57]">{mod.type}</span></span>
-                        <span>confidence: <span style={{ color: CONFIDENCE_COLORS[mod.confidence] || '#004d57' }}>{mod.confidence}</span></span>
-                        <span>severity: <span style={{ color: SEVERITY_COLORS[mod.severity] || '#004d57' }}>{mod.severity}</span></span>
+                        <span>类型：<span className="text-[#004d57]">{mod.type}</span></span>
+                        <span>置信度：<span style={{ color: CONFIDENCE_COLORS[mod.confidence] || '#004d57' }}>{mod.confidence}</span></span>
+                        <span>严重性：<span style={{ color: SEVERITY_COLORS[mod.severity] || '#004d57' }}>{mod.severity}</span></span>
                         {mod.scan_scope && <span>scope: <span className="text-[#004d57]">{mod.scan_scope.join(', ')}</span></span>}
                       </div>
                       {mod.tags && mod.tags.length > 0 && (
                         <div className="flex items-center gap-1.5 flex-wrap">
-                          <span className="text-[#708e8e]">tags:</span>
+                          <span className="text-[#708e8e]">标签：</span>
                           {mod.tags.map((tag) => (
                             <span key={tag} className="text-[10px] px-1.5 py-0.5 bg-[#f6edda] border border-[#bbc3c4] text-[#0078c8]">{tag}</span>
                           ))}
@@ -219,13 +219,13 @@ export default function ModulesPage() {
                       )}
                       {mod.short_description && (
                         <div className="text-[#708e8e]">
-                          <span className="text-[#0078c8]">short: </span>
+                          <span className="text-[#0078c8]">摘要： </span>
                           <span className="text-[#004d57]">{mod.short_description}</span>
                         </div>
                       )}
                       {mod.confirmation_criteria && (
                         <div className="text-[#708e8e]">
-                          <span className="text-[#0078c8]">criteria: </span>
+                          <span className="text-[#0078c8]">判定条件： </span>
                           <span className="text-[#004d57]">{mod.confirmation_criteria}</span>
                         </div>
                       )}

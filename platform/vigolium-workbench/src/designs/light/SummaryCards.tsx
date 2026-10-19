@@ -18,14 +18,14 @@ export default function SummaryCards({ stats }: Props) {
     (stats?.modules.active.enabled || 0) + (stats?.modules.passive.enabled || 0);
 
   const items = [
-    { label: 'FINDINGS', value: formatNumber(stats?.findings.total || 0) },
+    { label: '漏洞数', value: formatNumber(stats?.findings.total || 0) },
     {
-      label: 'CRIT/HIGH',
+      label: '严重/高危',
       value: formatNumber(critHigh),
       color: critHigh > 0 ? '#E53935' : '#00b368',
     },
-    { label: 'RECORDS', value: formatNumber(stats?.http_records.total || 0) },
-    { label: 'MODULES', value: `${enabledModules}/${totalModules}` },
+    { label: 'HTTP 记录', value: formatNumber(stats?.http_records.total || 0) },
+    { label: '已启用模块', value: `${enabledModules}/${totalModules}` },
   ];
 
   return (

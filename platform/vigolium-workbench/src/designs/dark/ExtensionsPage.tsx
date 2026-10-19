@@ -8,7 +8,7 @@ import { useExtensions, useExtensionDocs } from '@/api/hooks';
 import type { Extension, ExtensionApiFunction } from '@/api/types';
 import { useToast } from '@/contexts/ToastContext';
 import { registerAgGrid } from '@/lib/ag-grid-register';
-import { SEVERITY_COLORS, CONFIDENCE_COLORS, AG_GRID_THEME } from './theme';
+import { SEVERITY_COLORS, CONFIDENCE_COLORS, AG_GRID_THEME, AG_GRID_LOCALE_ZH_CN } from './theme';
 import PageShell from './PageShell';
 import ExtensionDetailPanel from './ExtensionDetailPanel';
 
@@ -161,7 +161,7 @@ export default function ExtensionsPage() {
     if (row) {
       const fullName = row.namespace ? `${row.namespace}.${row.name}` : row.name;
       navigator.clipboard.writeText(fullName).then(() => {
-        toast(`Copied: ${fullName}`, 'success');
+        toast(`已复制：${fullName}`, 'success');
       });
     }
   }, [toast]);
@@ -204,7 +204,7 @@ export default function ExtensionsPage() {
               <button
                 onClick={() => tab === 'extensions' ? extRefetch() : docsRefetch()}
                 className="text-[#918175] hover:text-[#7fd962] transition-colors"
-                title="Refresh"
+                title="刷新"
               >
                 <RefreshCw className={`w-3 h-3 ${(tab === 'extensions' ? extFetching : docsFetching) ? 'animate-spin' : ''}`} />
               </button>
@@ -246,7 +246,7 @@ export default function ExtensionsPage() {
                       type="text"
                       value={searchInput}
                       onChange={(e) => setSearchInput(e.target.value)}
-                      placeholder="search..."
+                      placeholder="搜索..."
                       className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-40 focus:outline-none"
                     />
                   </div>
@@ -261,7 +261,7 @@ export default function ExtensionsPage() {
                       type="text"
                       value={docsSearch}
                       onChange={(e) => setDocsSearch(e.target.value)}
-                      placeholder="search functions..."
+                      placeholder="搜索函数..."
                       className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-48 focus:outline-none"
                     />
                   </div>
@@ -273,6 +273,7 @@ export default function ExtensionsPage() {
           <div className={`${AG_GRID_THEME} w-full flex-1`}>
             {tab === 'extensions' && (
               <AgGridReact<Extension>
+                localeText={AG_GRID_LOCALE_ZH_CN}
                 rowData={extData?.extensions || []}
                 columnDefs={extColumnDefs}
                 loading={extLoading}
@@ -281,11 +282,12 @@ export default function ExtensionsPage() {
                 domLayout="normal"
                 onRowClicked={onExtRowClicked}
                 getRowId={(params) => params.data.file_name}
-                overlayNoRowsTemplate='<span style="color:#403d38">no extensions</span>'
+                overlayNoRowsTemplate='<span style="color:#403d38">暂无扩展</span>'
               />
             )}
             {tab === 'docs' && (
               <AgGridReact<ExtensionApiFunction>
+                localeText={AG_GRID_LOCALE_ZH_CN}
                 rowData={docsData?.functions || []}
                 columnDefs={docsColumnDefs}
                 loading={docsLoading}
@@ -294,7 +296,7 @@ export default function ExtensionsPage() {
                 domLayout="normal"
                 onRowClicked={onDocsRowClicked}
                 getRowId={(params) => params.data.full_name}
-                overlayNoRowsTemplate='<span style="color:#403d38">no functions</span>'
+                overlayNoRowsTemplate='<span style="color:#403d38">暂无函数</span>'
               />
             )}
           </div>

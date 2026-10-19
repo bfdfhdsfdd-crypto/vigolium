@@ -129,8 +129,8 @@ export default function ScanHistoryTable() {
       <div className="border border-[#2e2b26] bg-[#1c1b19] overflow-hidden">
         <div className="px-3 py-1.5 border-b border-[#2e2b26]">
           <div className="flex items-center gap-1.5">
-            <span className="text-[#7fd962] text-xs font-bold">SCAN HISTORY</span>
-            <button onClick={() => refetch()} className="text-[#918175] hover:text-[#7fd962] transition-colors" title="Refresh">
+            <span className="text-[#7fd962] text-xs font-bold">扫描历史</span>
+            <button onClick={() => refetch()} className="text-[#918175] hover:text-[#7fd962] transition-colors" title="刷新">
               <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin' : ''}`} />
             </button>
           </div>
@@ -140,13 +140,13 @@ export default function ScanHistoryTable() {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-[#2e2b26]">
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">STATUS</th>
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">NAME</th>
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">MODE / SOURCE</th>
-                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">FINDINGS</th>
-                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">PROCESSED</th>
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">STARTED</th>
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">ACTIONS</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">状态</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">名称</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">模式 / 来源</th>
+                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">漏洞数</th>
+                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">已处理</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">开始时间</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">操作</th>
               </tr>
             </thead>
             <tbody>
@@ -165,7 +165,7 @@ export default function ScanHistoryTable() {
               )}
               {!scansLoading && (!scansData?.data || scansData.data.length === 0) && (
                 <tr>
-                  <td colSpan={7} className="px-3 py-4 text-center text-[#403d38] v-fade-in">no scans</td>
+                  <td colSpan={7} className="px-3 py-4 text-center text-[#403d38] v-fade-in">暂无扫描记录</td>
                 </tr>
               )}
               {scansData?.data?.map((scan) => (
@@ -238,15 +238,15 @@ export default function ScanHistoryTable() {
           <table className="w-full text-xs">
             <thead>
               <tr className="border-b border-[#2e2b26]">
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">STATUS</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">状态</th>
                 <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">UUID</th>
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">MODE</th>
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">AGENT</th>
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">TARGET</th>
-                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">FINDINGS</th>
-                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">SAVED</th>
-                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">DURATION</th>
-                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">COMPLETED</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">模式</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">代理</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">目标</th>
+                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">漏洞数</th>
+                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">已保存</th>
+                <th className="text-right px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">耗时</th>
+                <th className="text-left px-3 py-1.5 text-[#918175] text-[10px] uppercase font-normal">完成时间</th>
               </tr>
             </thead>
             <tbody>
@@ -279,7 +279,7 @@ export default function ScanHistoryTable() {
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan={9} className="px-3 py-4 text-center text-[#403d38]">no sessions</td></tr>
+                <tr><td colSpan={9} className="px-3 py-4 text-center text-[#403d38]">暂无会话</td></tr>
               )}
             </tbody>
           </table>

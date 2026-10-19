@@ -12,8 +12,8 @@ import { useAgentsLogic, AGENT_OPTIONS, AUDIT_PREP_MODE_OPTIONS, INTENSITY_OPTIO
 
 const INPUT_TYPE_LABELS: Record<DetectedInputType, { label: string; color: string }> = {
   url: { label: 'URL', color: '#00b368' },
-  raw: { label: 'RAW REQUEST', color: '#0078c8' },
-  curl: { label: 'CURL', color: '#c49000' },
+  raw: { label: '原始 HTTP 请求', color: '#0078c8' },
+  curl: { label: 'curl 请求', color: '#c49000' },
   empty: { label: '', color: '#708e8e' },
 };
 
@@ -30,10 +30,22 @@ const STATUS_TONE_COLOR: Record<AgentStatusTone, string> = {
 function StatusBadge({ status }: { status: string }) {
   const Icon = STATUS_ICON[status] || Clock;
   const color = STATUS_TONE_COLOR[agentStatusTone(status)];
+  const labels: Record<string, string> = {
+    completed: '已完成',
+    error: '失败',
+    failed: '失败',
+    running: '运行中',
+    pending: '等待中',
+    queued: '排队中',
+    cancelled: '已取消',
+    canceled: '已取消',
+    paused: '已暂停',
+    stopped: '已停止',
+  };
   return (
     <span className="flex items-center gap-1 text-xs font-bold" style={{ color }}>
       <Icon className={`w-3 h-3 ${status === 'running' ? 'animate-spin' : ''}`} />
-      {status}
+      {labels[status.toLowerCase()] ?? status}
     </span>
   );
 }
@@ -55,32 +67,32 @@ function SessionDetailPanel({ session, onClose }: { session: AgentSessionDetail;
   return (
     <div className="border-l border-[#bbc3c4] flex flex-col h-full min-h-0">
       <div className="flex items-center justify-between px-3 py-1.5 border-b border-[#bbc3c4] shrink-0">
-        <span className="text-xs font-bold text-[#0078c8]">SESSION DETAILS</span>
+        <span className="text-xs font-bold text-[#0078c8]">会话详情</span>
         <button onClick={onClose} className="text-[#708e8e] hover:text-[#005661] text-xs font-bold px-1">&#10005;</button>
       </div>
       <div className="shrink-0 border-b border-[#bbc3c4] px-3 py-2 text-xs space-y-1">
         <div className="text-[#0078c8] font-mono break-all">{session.uuid}</div>
         <div className="flex flex-wrap gap-x-4 gap-y-0.5">
-          <span><span className="text-[#708e8e]">status </span><StatusBadge status={session.status} /></span>
-          <span><span className="text-[#708e8e]">mode </span><span className="text-[#005661]">{session.mode}</span></span>
-          <span><span className="text-[#708e8e]">agent </span><span className="text-[#005661]">{session.agent_name}</span></span>
-          {session.input_type && <span><span className="text-[#708e8e]">input </span><span className="text-[#005661]">{session.input_type}</span></span>}
+          <span><span className="text-[#708e8e]">状态 </span><StatusBadge status={session.status} /></span>
+          <span><span className="text-[#708e8e]">模式 </span><span className="text-[#005661]">{session.mode}</span></span>
+          <span><span className="text-[#708e8e]">代理 </span><span className="text-[#005661]">{session.agent_name}</span></span>
+          {session.input_type && <span><span className="text-[#708e8e]">输入类型 </span><span className="text-[#005661]">{session.input_type}</span></span>}
         </div>
         {session.target_url && (
-          <div><span className="text-[#708e8e]">target </span><span className="text-[#005661] break-all">{session.target_url}</span></div>
+          <div><span className="text-[#708e8e]">目标 </span><span className="text-[#005661] break-all">{session.target_url}</span></div>
         )}
         <div className="flex flex-wrap gap-x-4 gap-y-0.5">
-          <span><span className="text-[#708e8e]">findings </span><span className="text-[#005661]">{session.finding_count}</span></span>
-          <span><span className="text-[#708e8e]">records </span><span className="text-[#005661]">{session.record_count}</span></span>
-          <span><span className="text-[#708e8e]">saved </span><span className="text-[#00b368]">{session.saved_count}</span></span>
+          <span><span className="text-[#708e8e]">漏洞数 </span><span className="text-[#005661]">{session.finding_count}</span></span>
+          <span><span className="text-[#708e8e]">记录数 </span><span className="text-[#005661]">{session.record_count}</span></span>
+          <span><span className="text-[#708e8e]">已保存 </span><span className="text-[#00b368]">{session.saved_count}</span></span>
         </div>
         <div className="flex flex-wrap gap-x-4 gap-y-0.5">
-          <span><span className="text-[#708e8e]">duration </span><span className="text-[#005661]">{formatDuration(session.duration_ms)}</span></span>
-          <span><span className="text-[#708e8e]">started </span><span className="text-[#005661]">{formatDate(session.started_at)}</span></span>
-          {session.completed_at && <span><span className="text-[#708e8e]">completed </span><span className="text-[#005661]">{formatDate(session.completed_at)}</span></span>}
+          <span><span className="text-[#708e8e]">耗时 </span><span className="text-[#005661]">{formatDuration(session.duration_ms)}</span></span>
+          <span><span className="text-[#708e8e]">开始时间 </span><span className="text-[#005661]">{formatDate(session.started_at)}</span></span>
+          {session.completed_at && <span><span className="text-[#708e8e]">完成时间 </span><span className="text-[#005661]">{formatDate(session.completed_at)}</span></span>}
         </div>
         {session.phases_run && session.phases_run.length > 0 && (
-          <div><span className="text-[#708e8e]">phases </span><span className="text-[#005661]">{session.phases_run.join(' \u2192 ')}</span></div>
+          <div><span className="text-[#708e8e]">扫描阶段 </span><span className="text-[#005661]">{session.phases_run.join(' \u2192 ')}</span></div>
         )}
         {session.error_message && (
           <div className="whitespace-pre-wrap break-words" style={{ color: STATUS_TONE_COLOR[agentStatusTone(session.status) === 'fail' ? 'fail' : 'warn'] }}>
@@ -88,7 +100,7 @@ function SessionDetailPanel({ session, onClose }: { session: AgentSessionDetail;
           </div>
         )}
         {session.module_names && session.module_names.length > 0 && (
-          <div><span className="text-[#708e8e]">modules </span><span className="text-[#005661]">{session.module_names.join(', ')}</span></div>
+          <div><span className="text-[#708e8e]">模块 </span><span className="text-[#005661]">{session.module_names.join(', ')}</span></div>
         )}
       </div>
       <div className="flex-1 min-h-0 overflow-y-auto text-xs">
@@ -98,7 +110,7 @@ function SessionDetailPanel({ session, onClose }: { session: AgentSessionDetail;
               <Terminal className="w-3 h-3" />PROMPT
             </summary>
             <div className="relative">
-              <button onClick={() => copyToClipboard(session.prompt_sent!, 'prompt')} className="absolute top-1.5 right-2 text-[#708e8e] hover:text-[#005661] p-0.5" title="Copy to clipboard">
+              <button onClick={() => copyToClipboard(session.prompt_sent!, 'prompt')} className="absolute top-1.5 right-2 text-[#708e8e] hover:text-[#005661] p-0.5" title="复制到剪贴板">
                 {copied === 'prompt' ? <Check className="w-3.5 h-3.5 text-[#00b368]" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
               <pre className="px-3 py-2 bg-[#ede4d1] text-[#005661] whitespace-pre-wrap break-all font-mono overflow-x-auto">{session.prompt_sent}</pre>
@@ -111,7 +123,7 @@ function SessionDetailPanel({ session, onClose }: { session: AgentSessionDetail;
               <ScrollText className="w-3 h-3" />RAW OUTPUT
             </summary>
             <div className="relative">
-              <button onClick={() => copyToClipboard(session.agent_raw_output!, 'output')} className="absolute top-1.5 right-2 z-10 text-[#708e8e] hover:text-[#005661] p-0.5" title="Copy to clipboard">
+              <button onClick={() => copyToClipboard(session.agent_raw_output!, 'output')} className="absolute top-1.5 right-2 z-10 text-[#708e8e] hover:text-[#005661] p-0.5" title="复制到剪贴板">
                 {copied === 'output' ? <Check className="w-3.5 h-3.5 text-[#00b368]" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
               {/* ANSI-stripped terminal output, not Markdown: parsing up to 200 KB
@@ -126,7 +138,7 @@ function SessionDetailPanel({ session, onClose }: { session: AgentSessionDetail;
               <Zap className="w-3 h-3" />ATTACK PLAN
             </summary>
             <div className="relative">
-              <button onClick={() => copyToClipboard(tryPrettyJson(session.attack_plan), 'plan')} className="absolute top-1.5 right-2 z-10 text-[#708e8e] hover:text-[#005661] p-0.5" title="Copy to clipboard">
+              <button onClick={() => copyToClipboard(tryPrettyJson(session.attack_plan), 'plan')} className="absolute top-1.5 right-2 z-10 text-[#708e8e] hover:text-[#005661] p-0.5" title="复制到剪贴板">
                 {copied === 'plan' ? <Check className="w-3.5 h-3.5 text-[#00b368]" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
               <div className="px-3 py-2 bg-[#ede4d1] text-[#005661] overflow-x-auto prose prose-xs max-w-none [&_pre]:bg-[#d4e8e2] [&_pre]:p-2 [&_pre]:text-xs [&_pre]:rounded [&_code]:text-[#00b368] [&_p]:m-0 [&_p]:mb-1.5 [&_h1]:text-sm [&_h2]:text-sm [&_h3]:text-xs [&_h1]:mt-2 [&_h2]:mt-2 [&_h3]:mt-1 [&_ul]:my-1 [&_ol]:my-1 [&_li]:my-0">
@@ -141,7 +153,7 @@ function SessionDetailPanel({ session, onClose }: { session: AgentSessionDetail;
               <Bug className="w-3 h-3" />TRIAGE RESULT
             </summary>
             <div className="relative">
-              <button onClick={() => copyToClipboard(tryPrettyJson(session.triage_result), 'triage')} className="absolute top-1.5 right-2 text-[#708e8e] hover:text-[#005661] p-0.5" title="Copy to clipboard">
+              <button onClick={() => copyToClipboard(tryPrettyJson(session.triage_result), 'triage')} className="absolute top-1.5 right-2 text-[#708e8e] hover:text-[#005661] p-0.5" title="复制到剪贴板">
                 {copied === 'triage' ? <Check className="w-3.5 h-3.5 text-[#00b368]" /> : <Copy className="w-3.5 h-3.5" />}
               </button>
               <pre className="px-3 py-2 bg-[#ede4d1] text-[#005661] whitespace-pre-wrap break-all font-mono overflow-x-auto">{tryPrettyJson(session.triage_result)}</pre>
@@ -168,7 +180,7 @@ export default function AgentsPage() {
         <div className="shrink-0 border border-[#bbc3c4] bg-[#f6edda] flex flex-col overflow-hidden">
           {/* Header with scan button */}
           <div className="px-3 py-2 border-b border-[#bbc3c4] shrink-0 flex items-center justify-between">
-            <h2 className="text-[#0078c8] text-xs font-bold tracking-wide">AGENTIC SCAN</h2>
+            <h2 className="text-[#0078c8] text-xs font-bold tracking-wide">智能代理扫描</h2>
             {h.isScanStreaming && (
               <span className="text-xs text-[#0078c8] flex items-center gap-1"><Loader2 className="w-3 h-3 animate-spin" /> streaming...</span>
             )}
@@ -183,18 +195,18 @@ export default function AgentsPage() {
                   <button
                     onClick={() => h.setTargetInputTab('target')}
                     className={`text-xs font-bold transition-colors ${h.targetInputTab === 'target' ? 'text-[#00b368]' : 'text-[#708e8e] hover:text-[#005661]'}`}
-                  >Target</button>
+                  >目标</button>
                   <span className="text-[#bbc3c4]">|</span>
                   <button
                     onClick={() => h.setTargetInputTab('prompt')}
                     className={`text-xs font-bold transition-colors flex items-center gap-1 ${h.targetInputTab === 'prompt' ? 'text-[#00b368]' : 'text-[#708e8e] hover:text-[#005661]'}`}
-                  ><Crosshair className="w-3 h-3" />Prompt</button>
+                  ><Crosshair className="w-3 h-3" />提示词</button>
                   {h.targetInputTab === 'target' ? (
                     <span className="text-[10px]" style={{ color: INPUT_TYPE_LABELS[h.detectedInputType].color }}>
                       (type: {h.detectedInputType === 'empty' ? 'url' : h.detectedInputType === 'raw' ? 'raw request' : h.detectedInputType})
                     </span>
                   ) : (
-                    <span className="text-[10px] text-[#c49000]">(type: natural language)</span>
+                    <span className="text-[10px] text-[#c49000]">(自然语言)</span>
                   )}
                 </div>
                 {h.targetInputTab === 'target' ? (
@@ -225,7 +237,7 @@ export default function AgentsPage() {
                           h.handleTargetSubmit();
                         }
                       }}
-                      placeholder="scan localhost:3000 for auth bypass"
+                      placeholder="扫描 localhost:3000，检查是否存在认证绕过漏洞"
                       rows={Math.max(4, Math.min(20, h.targetPrompt.split('\n').length + 1))}
                       className={`${inputClass} !text-xs !py-1.5 font-mono resize-y whitespace-pre-wrap break-all flex-1`}
                     />
@@ -236,7 +248,7 @@ export default function AgentsPage() {
               </div>
               {/* Source upload — 1/3 */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#708e8e] text-xs mb-0.5">Source Code</label>
+                <label className="text-[#708e8e] text-xs mb-0.5">源代码</label>
                 <div
                   onDragEnter={h.onUploadDragEnter} onDragLeave={h.onUploadDragLeave} onDragOver={h.onUploadDragOver} onDrop={h.onUploadDrop}
                   className={`border border-dashed p-2 text-center transition-colors flex-1 flex flex-col items-center justify-center gap-0.5 ${h.uploadCompressing || h.uploadRepo.isPending ? '' : 'cursor-pointer'} ${h.uploadDragging ? 'border-[#00b368] bg-[#00b368]/10' : h.activeSource ? 'border-[#00b368] bg-[#00b368]/5' : 'border-[#bbc3c4] hover:border-[#0078c8]/50'}`}
@@ -248,21 +260,21 @@ export default function AgentsPage() {
                   ) : (
                     <div className="flex items-center justify-center gap-1.5"><Upload className="w-3.5 h-3.5 text-[#0078c8]/70" /><span className="text-[10px] text-[#005661]">{h.uploadDragging ? 'Drop here' : 'Upload source code'}</span></div>
                   )}
-                  <p className="text-[9px] text-[#708e8e]">.zip, .tar.gz, folder — max 500 MB</p>
+                  <p className="text-[9px] text-[#708e8e]">.zip、.tar.gz 压缩包或文件夹 — 最大 500 MB</p>
                   {h.activeSource && (
                     <p className="text-[9px] text-[#708e8e] truncate max-w-full px-2" title={h.activeSource.includes('x-access-token') ? 'Authenticated clone URL' : h.activeSource}>
                       {h.activeSource.includes('x-access-token') ? h.activeSource.replace(/https:\/\/x-access-token:[^@]+@/, 'https://') : h.activeSource}
                     </p>
                   )}
-                  {h.uploadRepo.isSuccess && <p className="text-[9px] text-[#00b368]">uploaded</p>}
-                  {h.uploadRepo.isError && <p className="text-[9px] text-[#e34e1c]">failed</p>}
+                  {h.uploadRepo.isSuccess && <p className="text-[9px] text-[#00b368]">已上传</p>}
+                  {h.uploadRepo.isError && <p className="text-[9px] text-[#e34e1c]">失败</p>}
                 </div>
               </div>
             </div>
 
             {/* Scanning Mode */}
             <div>
-              <label className="text-[#708e8e] text-xs block mb-1">Scanning Mode</label>
+              <label className="text-[#708e8e] text-xs block mb-1">扫描模式</label>
               {/* Top-level mode selector */}
               <div className="grid grid-cols-3 gap-0">
                 <button
@@ -275,9 +287,9 @@ export default function AgentsPage() {
                 >
                   <div className="flex items-center justify-center gap-1.5 mb-0.5">
                     <Bot className={`w-3 h-3 ${h.scanProfile === 'autopilot' ? 'text-[#4a9aba]' : 'text-[#708e8e]'}`} />
-                    <span className={`text-xs font-bold ${h.scanProfile === 'autopilot' ? 'text-[#3d7a8f]' : 'text-[#005661]'}`}>AUTOPILOT</span>
+                    <span className={`text-xs font-bold ${h.scanProfile === 'autopilot' ? 'text-[#3d7a8f]' : 'text-[#005661]'}`}>自动驾驶</span>
                   </div>
-                  <p className="text-[10px] text-[#708e8e] leading-tight">AI agent drives the CLI autonomously — explores, scans, and iterates on findings.</p>
+                  <p className="text-[10px] text-[#708e8e] leading-tight">AI 代理将自主操作命令行，探索目标、执行扫描并迭代分析发现。</p>
                 </button>
                 <button
                   onClick={() => { if (h.scanProfile !== 'quick') h.setScanProfile('quick'); }}
@@ -289,9 +301,9 @@ export default function AgentsPage() {
                 >
                   <div className="flex items-center justify-center gap-1.5 mb-0.5">
                     <Bug className={`w-3 h-3 ${h.scanProfile === 'quick' ? 'text-[#4a9aba]' : 'text-[#708e8e]'}`} />
-                    <span className={`text-xs font-bold ${h.scanProfile === 'quick' ? 'text-[#3d7a8f]' : 'text-[#005661]'}`}>SWARM</span>
+                    <span className={`text-xs font-bold ${h.scanProfile === 'quick' ? 'text-[#3d7a8f]' : 'text-[#005661]'}`}>协同扫描</span>
                   </div>
-                  <p className="text-[10px] text-[#708e8e] leading-tight">AI-guided targeted vulnerability scan with module selection.</p>
+                  <p className="text-[10px] text-[#708e8e] leading-tight">由 AI 引导并可选择模块的定向漏洞扫描。</p>
                 </button>
                 <button
                   onClick={() => h.setScanProfile('audit')}
@@ -303,16 +315,16 @@ export default function AgentsPage() {
                 >
                   <div className="flex items-center justify-center gap-1.5 mb-0.5">
                     <ShieldCheck className={`w-3 h-3 ${h.scanProfile === 'audit' ? 'text-[#4a9aba]' : 'text-[#708e8e]'}`} />
-                    <span className={`text-xs font-bold ${h.scanProfile === 'audit' ? 'text-[#3d7a8f]' : 'text-[#005661]'}`}>AUDIT</span>
+                    <span className={`text-xs font-bold ${h.scanProfile === 'audit' ? 'text-[#3d7a8f]' : 'text-[#005661]'}`}>审计</span>
                   </div>
-                  <p className="text-[10px] text-[#708e8e] leading-tight">Thorough source-code security audit driven by the piolium harness.</p>
+                  <p className="text-[10px] text-[#708e8e] leading-tight">通过 piolium 测试框架执行全面的源代码安全审计。</p>
                 </button>
               </div>
             </div>
 
             {/* Intensity */}
             <div>
-              <label className="text-[#708e8e] text-xs block mb-1">Scan Intensity Level</label>
+              <label className="text-[#708e8e] text-xs block mb-1">扫描强度等级</label>
               <div className="grid grid-cols-3 gap-0">
                 {INTENSITY_OPTIONS.filter((o) => o.value !== '').map((o) => {
                   const currentIntensity = h.scanProfile === 'autopilot' ? h.autopilotIntensity : h.scanProfile === 'audit' ? h.auditIntensity : h.swarmIntensity;
@@ -378,7 +390,7 @@ export default function AgentsPage() {
               </button>
               {h.targetInputTab === 'prompt' && h.targetRunId && h.targetRunStatus && (
                 <span className="flex items-center gap-1.5 text-xs">
-                  <span className="text-[#708e8e]">run</span>
+                  <span className="text-[#708e8e]">运行次数</span>
                   <span className="text-[#0078c8] font-mono">{h.targetRunId.slice(0, 12)}</span>
                   <StatusBadge status={h.targetRunStatus.status} />
                   {h.targetRunStatus.current_phase && <span className="text-[#005661]">{h.targetRunStatus.current_phase}</span>}
@@ -395,45 +407,45 @@ export default function AgentsPage() {
                   <div className="space-y-1.5">
                     <div className="grid grid-cols-4 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Module Tags</label>
-                        <input value={h.swarmModuleTags} onChange={(e) => h.setSwarmModuleTags(e.target.value)} placeholder="xss, sqli" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">模块标签</label>
+                        <input value={h.swarmModuleTags} onChange={(e) => h.setSwarmModuleTags(e.target.value)} placeholder="例如 xss、sqli" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Vuln Type</label>
-                        <input value={h.swarmVulnType} onChange={(e) => h.setSwarmVulnType(e.target.value)} placeholder="sqli" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">漏洞类型</label>
+                        <input value={h.swarmVulnType} onChange={(e) => h.setSwarmVulnType(e.target.value)} placeholder="例如 sqli" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Max Iterations</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">最大迭代次数</label>
                         <input value={h.swarmMaxIterations} onChange={(e) => h.setSwarmMaxIterations(e.target.value)} placeholder="3" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Timeout</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">超时时间</label>
                         <input value={h.swarmTimeout} onChange={(e) => h.setSwarmTimeout(e.target.value)} placeholder="30m" className={inputClass} />
                       </div>
                     </div>
                     <div>
-                      <label className="text-[#708e8e] text-[10px] block mb-0.5">Instruction</label>
-                      <textarea value={h.swarmInstruction} onChange={(e) => h.setSwarmInstruction(e.target.value)} placeholder="Focus on business logic flaws..." rows={2} className={`${inputClass} resize-y`} />
+                      <label className="text-[#708e8e] text-[10px] block mb-0.5">指令</label>
+                      <textarea value={h.swarmInstruction} onChange={(e) => h.setSwarmInstruction(e.target.value)} placeholder="重点检查业务逻辑漏洞..." rows={2} className={`${inputClass} resize-y`} />
                     </div>
                     <div className="grid grid-cols-4 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Focus</label>
-                        <input value={h.swarmFocus} onChange={(e) => h.setSwarmFocus(e.target.value)} placeholder="auth bypass" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">关注重点</label>
+                        <input value={h.swarmFocus} onChange={(e) => h.setSwarmFocus(e.target.value)} placeholder="认证绕过" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Profile</label>
-                        <input value={h.swarmProfile} onChange={(e) => h.setSwarmProfile(e.target.value)} placeholder="thorough" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">扫描配置</label>
+                        <input value={h.swarmProfile} onChange={(e) => h.setSwarmProfile(e.target.value)} placeholder="全面扫描" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Diff</label>
-                        <input value={h.swarmDiff} onChange={(e) => h.setSwarmDiff(e.target.value)} placeholder="PR URL or main...branch" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">代码差异</label>
+                        <input value={h.swarmDiff} onChange={(e) => h.setSwarmDiff(e.target.value)} placeholder="PR URL 或 main...branch" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Intensity</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">扫描强度</label>
                         <Dropdown value={h.swarmIntensity} onChange={h.setSwarmIntensity} options={INTENSITY_OPTIONS} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Vigolium Audit</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Vigolium 审计模式</label>
                         <Dropdown value={h.swarmAudit} onChange={h.setSwarmAudit} options={AUDIT_PREP_MODE_OPTIONS} />
                       </div>
                     </div>
@@ -457,16 +469,16 @@ export default function AgentsPage() {
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Only Phase</label>
-                        <input value={h.swarmOnlyPhase} onChange={(e) => h.setSwarmOnlyPhase(e.target.value)} placeholder="plan" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">仅执行阶段</label>
+                        <input value={h.swarmOnlyPhase} onChange={(e) => h.setSwarmOnlyPhase(e.target.value)} placeholder="plan（计划阶段）" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Skip Phases <span className="text-[#bbc3c4] italic">comma-sep</span></label>
-                        <input value={h.swarmSkipPhases} onChange={(e) => h.setSwarmSkipPhases(e.target.value)} placeholder="triage, native-rescan" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">跳过阶段 <span className="text-[#bbc3c4] italic">逗号分隔</span></label>
+                        <input value={h.swarmSkipPhases} onChange={(e) => h.setSwarmSkipPhases(e.target.value)} placeholder="triage、native-rescan" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Start From</label>
-                        <input value={h.swarmStartFrom} onChange={(e) => h.setSwarmStartFrom(e.target.value)} placeholder="triage" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">起始阶段</label>
+                        <input value={h.swarmStartFrom} onChange={(e) => h.setSwarmStartFrom(e.target.value)} placeholder="triage（分流阶段）" className={inputClass} />
                       </div>
                     </div>
                   </div>
@@ -477,43 +489,43 @@ export default function AgentsPage() {
                   <div className="space-y-1.5">
                     <div className="grid grid-cols-4 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Agent</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">代理</label>
                         <Dropdown value={h.autopilotAgent} onChange={h.setAutopilotAgent} options={AGENT_OPTIONS} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Focus</label>
-                        <input value={h.autopilotFocus} onChange={(e) => h.setAutopilotFocus(e.target.value)} placeholder="auth, api" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">关注重点</label>
+                        <input value={h.autopilotFocus} onChange={(e) => h.setAutopilotFocus(e.target.value)} placeholder="auth、api" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Timeout</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">超时时间</label>
                         <input value={h.autopilotTimeout} onChange={(e) => h.setAutopilotTimeout(e.target.value)} placeholder="30m" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Max Commands</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">最大命令数</label>
                         <input value={h.autopilotMaxCommands} onChange={(e) => h.setAutopilotMaxCommands(e.target.value)} placeholder="50" className={inputClass} />
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Source</label>
-                        <input value={h.autopilotSource} onChange={(e) => h.setAutopilotSource(e.target.value)} placeholder="git URL or local path" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">来源</label>
+                        <input value={h.autopilotSource} onChange={(e) => h.setAutopilotSource(e.target.value)} placeholder="Git URL 或本地路径" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Diff</label>
-                        <input value={h.autopilotDiff} onChange={(e) => h.setAutopilotDiff(e.target.value)} placeholder="PR URL or main...branch" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">代码差异</label>
+                        <input value={h.autopilotDiff} onChange={(e) => h.setAutopilotDiff(e.target.value)} placeholder="PR URL 或 main...branch" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Intensity</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">扫描强度</label>
                         <Dropdown value={h.autopilotIntensity} onChange={h.setAutopilotIntensity} options={INTENSITY_OPTIONS} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Vigolium Audit Mode</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Vigolium 审计模式</label>
                         <Dropdown value={h.autopilotAuditMode} onChange={h.setAutopilotAuditMode} options={AUDIT_PREP_MODE_OPTIONS} />
                       </div>
                     </div>
                     <div>
-                      <label className="text-[#708e8e] text-[10px] block mb-0.5">Instruction</label>
-                      <textarea value={h.autopilotInstruction} onChange={(e) => h.setAutopilotInstruction(e.target.value)} placeholder="Custom instruction for the agent..." rows={2} className={`${inputClass} resize-y`} />
+                      <label className="text-[#708e8e] text-[10px] block mb-0.5">指令</label>
+                      <textarea value={h.autopilotInstruction} onChange={(e) => h.setAutopilotInstruction(e.target.value)} placeholder="输入代理的自定义指令..." rows={2} className={`${inputClass} resize-y`} />
                     </div>
                     <div className="flex items-center gap-1">
                       {([
@@ -537,47 +549,47 @@ export default function AgentsPage() {
                   <div className="space-y-1.5">
                     <div className="grid grid-cols-4 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Mode</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">模式</label>
                         <Dropdown value={h.auditMode} onChange={h.setAuditMode} options={AUDIT_MODE_OPTIONS} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Intensity</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">扫描强度</label>
                         <Dropdown value={h.auditIntensity} onChange={h.setAuditIntensity} options={INTENSITY_OPTIONS} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Timeout</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">超时时间</label>
                         <input value={h.auditTimeout} onChange={(e) => h.setAuditTimeout(e.target.value)} placeholder="2h" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Commit Depth</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">提交深度</label>
                         <input value={h.auditCommitDepth} onChange={(e) => h.setAuditCommitDepth(e.target.value)} placeholder="0" className={inputClass} />
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Diff</label>
-                        <input value={h.auditDiff} onChange={(e) => h.setAuditDiff(e.target.value)} placeholder="PR URL or HEAD~3" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">代码差异</label>
+                        <input value={h.auditDiff} onChange={(e) => h.setAuditDiff(e.target.value)} placeholder="PR URL 或 HEAD~3" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Last Commits</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">最近提交数</label>
                         <input value={h.auditLastCommits} onChange={(e) => h.setAuditLastCommits(e.target.value)} placeholder="5" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Files <span className="text-[#bbc3c4] italic">comma-sep</span></label>
-                        <input value={h.auditFiles} onChange={(e) => h.setAuditFiles(e.target.value)} placeholder="src/main.go, src/auth.go" className={inputClass} />
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">文件 <span className="text-[#bbc3c4] italic">逗号分隔</span></label>
+                        <input value={h.auditFiles} onChange={(e) => h.setAuditFiles(e.target.value)} placeholder="src/main.go、src/auth.go" className={inputClass} />
                       </div>
                     </div>
                     <div className="grid grid-cols-3 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Pi Provider</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Pi 服务提供方</label>
                         <input value={h.auditPiProvider} onChange={(e) => h.setAuditPiProvider(e.target.value)} placeholder="vertex-anthropic" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Pi Model</label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Pi 模型</label>
                         <input value={h.auditPiModel} onChange={(e) => h.setAuditPiModel(e.target.value)} placeholder="claude-opus-4-6" className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-[10px] block mb-0.5">Source <span className="text-[#bbc3c4] italic">git URL or path</span></label>
+                        <label className="text-[#708e8e] text-[10px] block mb-0.5">源码 <span className="text-[#bbc3c4] italic">Git URL 或本地路径</span></label>
                         <input value={h.auditSource} onChange={(e) => h.setAuditSource(e.target.value)} placeholder="git@github.com:org/repo.git" className={inputClass} />
                       </div>
                     </div>
@@ -601,38 +613,38 @@ export default function AgentsPage() {
                 {h.advancedMode === 'query' && (
                   <div className="space-y-2">
                     <div className="flex border border-[#bbc3c4]">
-                      <button onClick={() => h.setScanMode('template')} className={modeBtnClass(h.scanMode === 'template')}>TEMPLATE</button>
-                      <button onClick={() => h.setScanMode('custom')} className={modeBtnClass(h.scanMode === 'custom')}>CUSTOM</button>
+                      <button onClick={() => h.setScanMode('template')} className={modeBtnClass(h.scanMode === 'template')}>模板</button>
+                      <button onClick={() => h.setScanMode('custom')} className={modeBtnClass(h.scanMode === 'custom')}>自定义</button>
                     </div>
                     {h.scanMode === 'template' ? (
                       <>
                         <div>
-                          <label className="text-[#708e8e] text-xs block mb-0.5">Agent</label>
+                          <label className="text-[#708e8e] text-xs block mb-0.5">代理</label>
                           <input value={h.agentName} onChange={(e) => h.setAgentName(e.target.value)} placeholder="claude" className={inputClass} />
                         </div>
                         <div>
-                          <label className="text-[#708e8e] text-xs block mb-0.5">Prompt Template</label>
-                          <input value={h.promptTemplate} onChange={(e) => h.setPromptTemplate(e.target.value)} placeholder="security-analysis" className={inputClass} />
+                          <label className="text-[#708e8e] text-xs block mb-0.5">提示词模板</label>
+                          <input value={h.promptTemplate} onChange={(e) => h.setPromptTemplate(e.target.value)} placeholder="security-analysis（安全分析）" className={inputClass} />
                         </div>
                       </>
                     ) : (
                       <div>
-                        <label className="text-[#708e8e] text-xs block mb-0.5">Prompt</label>
-                        <textarea value={h.customPrompt} onChange={(e) => h.setCustomPrompt(e.target.value)} placeholder="Enter your prompt..." rows={3} className={`${inputClass} resize-y`} />
+                        <label className="text-[#708e8e] text-xs block mb-0.5">提示词</label>
+                        <textarea value={h.customPrompt} onChange={(e) => h.setCustomPrompt(e.target.value)} placeholder="输入提示词..." rows={3} className={`${inputClass} resize-y`} />
                       </div>
                     )}
                     <div>
-                      <label className="text-[#708e8e] text-xs block mb-0.5">Files <span className="text-[#bbc3c4] italic">comma-sep</span></label>
-                      <input value={h.queryFiles} onChange={(e) => h.setQueryFiles(e.target.value)} placeholder="src/main.go" className={inputClass} />
+                      <label className="text-[#708e8e] text-xs block mb-0.5">文件 <span className="text-[#bbc3c4] italic">逗号分隔</span></label>
+                      <input value={h.queryFiles} onChange={(e) => h.setQueryFiles(e.target.value)} placeholder="源码文件路径，例如 src/main.go" className={inputClass} />
                     </div>
                     <div className="grid grid-cols-2 gap-1.5">
                       <div>
-                        <label className="text-[#708e8e] text-xs block mb-0.5">Instruction</label>
-                        <input value={h.queryInstruction} onChange={(e) => h.setQueryInstruction(e.target.value)} placeholder="Custom instruction..." className={inputClass} />
+                        <label className="text-[#708e8e] text-xs block mb-0.5">指令</label>
+                        <input value={h.queryInstruction} onChange={(e) => h.setQueryInstruction(e.target.value)} placeholder="自定义指令..." className={inputClass} />
                       </div>
                       <div>
-                        <label className="text-[#708e8e] text-xs block mb-0.5">Source Label</label>
-                        <input value={h.querySourceLabel} onChange={(e) => h.setQuerySourceLabel(e.target.value)} placeholder="my-source" className={inputClass} />
+                        <label className="text-[#708e8e] text-xs block mb-0.5">来源标签</label>
+                        <input value={h.querySourceLabel} onChange={(e) => h.setQuerySourceLabel(e.target.value)} placeholder="来源名称" className={inputClass} />
                       </div>
                     </div>
                   </div>
@@ -659,13 +671,13 @@ export default function AgentsPage() {
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="border-b border-[#bbc3c4] text-[#bbc3c4]">
-                      <th className="text-left px-2 py-1 font-bold">STATUS</th>
+                      <th className="text-left px-2 py-1 font-bold">状态</th>
                       <th className="text-left px-2 py-1 font-bold">UUID</th>
-                      <th className="text-left px-2 py-1 font-bold">MODE</th>
-                      <th className="text-left px-2 py-1 font-bold">TARGET</th>
-                      <th className="text-right px-2 py-1 font-bold">FINDINGS</th>
-                      <th className="text-right px-2 py-1 font-bold">SAVED</th>
-                      <th className="text-right px-2 py-1 font-bold">DURATION</th>
+                      <th className="text-left px-2 py-1 font-bold">模式</th>
+                      <th className="text-left px-2 py-1 font-bold">目标</th>
+                      <th className="text-right px-2 py-1 font-bold">漏洞数</th>
+                      <th className="text-right px-2 py-1 font-bold">已保存</th>
+                      <th className="text-right px-2 py-1 font-bold">耗时</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -686,7 +698,7 @@ export default function AgentsPage() {
                         </tr>
                       ))
                     ) : (
-                      <tr><td colSpan={7} className="px-3 py-3 text-center text-[#bbc3c4]">no sessions</td></tr>
+                      <tr><td colSpan={7} className="px-3 py-3 text-center text-[#bbc3c4]">暂无会话</td></tr>
                     )}
                   </tbody>
                 </table>
@@ -716,8 +728,8 @@ export default function AgentsPage() {
                 )}
                 {h.scanResult && (
                   <span className="text-xs text-[#708e8e]">
-                    {h.scanResult.finding_count != null && <span className="text-[#005661] mr-3">findings: <b className="text-[#00b368]">{String(h.scanResult.finding_count)}</b></span>}
-                    {h.scanResult.saved_count != null && <span className="text-[#005661]">saved: <b className="text-[#00b368]">{String(h.scanResult.saved_count)}</b></span>}
+                    {h.scanResult.finding_count != null && <span className="text-[#005661] mr-3">漏洞数：<b className="text-[#00b368]">{String(h.scanResult.finding_count)}</b></span>}
+                    {h.scanResult.saved_count != null && <span className="text-[#005661]">已保存：<b className="text-[#00b368]">{String(h.scanResult.saved_count)}</b></span>}
                   </span>
                 )}
               </div>

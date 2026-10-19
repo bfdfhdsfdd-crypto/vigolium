@@ -11,9 +11,9 @@ const DEFAULT_HIDDEN: string[] = [
 
 /** All toggleable pages in cloud mode (label → href). */
 export const TOGGLEABLE_PAGES: { href: string; label: string }[] = [
-  { href: '/oast-interactions', label: 'OAST' },
-  { href: '/modules', label: 'MODULES' },
-  { href: '/extensions', label: 'EXTENSIONS' },
+  { href: '/oast-interactions', label: 'OAST 交互' },
+  { href: '/modules', label: '扫描模块' },
+  { href: '/extensions', label: '扩展' },
 ];
 
 const listeners = new Set<() => void>();

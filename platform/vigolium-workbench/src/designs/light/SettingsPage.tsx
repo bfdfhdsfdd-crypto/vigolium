@@ -21,54 +21,54 @@ import { useToast } from '@/contexts/ToastContext';
 import { useProjectContext } from '@/contexts/ProjectContext';
 import PageShell from './PageShell';
 
-const ABOUT_CONTENT = `Vigolium - High-fidelity vulnerability scanner with native scan precision and agentic scan intelligence.
+const ABOUT_CONTENT = `Vigolium 是一款高保真漏洞扫描器，将原生扫描的精准性与智能代理的分析能力相结合。
 
-Vigolium provides two complementary scanning modes:
+Vigolium 提供两种互补的扫描模式：
 
-- **Native Scan** (\`vigolium scan\`) — Deterministic, multi-phase vulnerability scanning. Fast, modular, and repeatable. Runs content discovery, browser spidering, SPA crawling, SAST, and active/passive audit phases with 215 scanner modules covering:
-  - **Injection** — XSS (reflected, DOM-based, SSR hydration), SQL injection (error-based, boolean/time-blind), NoSQL injection, SSTI/CSTI, CRLF injection, command injection, XXE/SAML, prototype pollution
-  - **Access Control** — CSRF, IDOR, authorization bypass, mass assignment, forbidden bypass, HTTP method tampering
-  - **File & Path** — LFI, path traversal, file upload flaws, directory listing, backup/sensitive file discovery, path normalization bypass
-  - **API & Protocol** — GraphQL introspection, SSRF (direct & blind), open redirect, HTTP request smuggling, JWT vulnerabilities, JSONP callback, WebSocket security, race conditions
-  - **Framework-Specific** — Spring Boot, Django, Laravel, Rails, Express, Next.js, Nuxt, Remix, ASP.NET/Blazor, Flask, FastAPI
-  - **CMS** — WordPress (XML-RPC, user enum, AJAX exposure), Drupal, Joomla, CMS installer exposure
-  - **Cloud & Infra** — Firebase (RTDB, storage, auth, functions), cloud storage listing/takeover, default credentials, web cache poisoning, CORS misconfiguration
-  - **Out-of-Band** — Blind vulnerabilities via OAST callbacks (blind SSRF, blind SSTI, OAST probes)
+- **原生扫描**（\`vigolium scan\`）——确定性、多阶段的漏洞扫描，快速、模块化且可重复。包含内容发现、浏览器爬取、SPA 爬取、SAST、主动与被动审计等阶段，并由 215 个扫描模块覆盖多类漏洞：
+  - **注入类**——反射型与 DOM 型 XSS、SQL 注入、NoSQL 注入、SSTI/CSTI、CRLF 注入、命令注入、XXE/SAML、原型污染
+  - **访问控制**——CSRF、IDOR、授权绕过、批量赋值、访问限制绕过、HTTP 方法篡改
+  - **文件与路径**——本地文件包含、路径遍历、文件上传漏洞、目录列表、备份与敏感文件发现、路径规范化绕过
+  - **API 与协议**——GraphQL 内省、SSRF、开放重定向、HTTP 请求走私、JWT 漏洞、JSONP 回调、WebSocket 安全、竞态条件
+  - **框架专项**——Spring Boot、Django、Laravel、Rails、Express、Next.js、Nuxt、Remix、ASP.NET/Blazor、Flask、FastAPI
+  - **CMS**——WordPress、Drupal、Joomla 及 CMS 安装程序暴露
+  - **云与基础设施**——Firebase、云存储暴露或接管、默认凭据、Web 缓存投毒、CORS 配置错误
+  - **带外检测**——通过 OAST 回连检测盲 SSRF、盲 SSTI 等漏洞
 
-- **Agentic Scan** (\`vigolium agent\`) — AI-driven scanning powered by Claude, Codex, or Gemini. The agent autonomously plans attack strategies, selects modules, generates custom payloads, and triages results — with the native scan engine handling heavy lifting underneath. Three modes: autopilot, pipeline, and swarm.
+- **智能代理扫描**（\`vigolium agent\`）——由 Claude、Codex 或 Gemini 驱动。代理可自主规划测试策略、选择模块、生成自定义载荷并分析结果，底层由原生扫描引擎执行。支持自动驾驶、流水线和协同扫描模式。
 
-It also operates as an API server with traffic ingestion, or a standalone ingestor client.
+Vigolium 还可作为 API 服务接收并导入流量，也可作为独立流量导入客户端运行。
 
-## Key Features
+## 主要功能
 
-### Native Scan
+### 原生扫描
 
-- **215 scanner modules** — 130 active (fuzzing) and 85 passive (pattern matching) modules covering OWASP Top 10 and beyond
-- **Out-of-band testing (OAST)** — detect blind vulnerabilities (blind XSS, SSRF, command injection) via interactsh callback URLs with automatic payload correlation
-- **Value-aware mutation** — classify parameter values by semantic type (integer, UUID, JWT, email, etc.) and generate intelligent mutations per intent (neighbor, boundary, escalation)
-- **Multi-phase pipeline** — external harvesting, content discovery, SPA crawling, and audit controlled by strategy presets
-- **Scanning profiles** — bundle strategy, pace, scope, and module config into a single YAML file (\`--scanning-profile\`)
-- **Multiple input formats** — URLs, OpenAPI/Swagger, Postman, Burp Suite, cURL, Nuclei JSONL
-- **Browser-based spider** — Chromium-driven crawler (Spitolas) with SPA support, form filling, and JS analysis
-- **Content discovery** — adaptive directory/file enumeration engine (Deparos) with soft-404 detection
-- **Header injection** — automatic fuzzing of existing and synthetic headers (X-Forwarded-For, X-Forwarded-Host, True-Client-IP, Referer)
-- **Multi-session authentication** — inline sessions (\`--session\`), session files (\`--session-file\`), or full auth configs (\`--auth-config\`) with login flows, token extraction, and IDOR/BOLA testing
-- **JavaScript extensions** — custom modules and hooks via embedded JS engine (\`vigolium.http\`, \`vigolium.scan\`) with session-aware HTTP APIs (login flows, cookie jars, CSRF extraction, auth testing, request sequencing)
-- **Concurrent architecture** — configurable worker pool with per-host rate limiting and hybrid in-memory/disk/Redis queue
-- **HTML reports** — generate self-contained HTML reports with sortable/filterable ag-grid tables (\`--format html\`)
+- **215 个扫描模块**——130 个主动模组（模糊测试）和 85 个被动模组（模式匹配），覆盖 OWASP Top 10 及更多风险
+- **带外测试（OAST）**——通过 interactsh 回调检测盲 XSS、SSRF、命令注入等漏洞，并自动关联载荷
+- **基于值语义的变异**——识别整数、UUID、JWT、邮箱等参数类型，并按邻近值、边界值、权限提升等意图生成变异
+- **多阶段流水线**——通过策略预设控制外部信息收集、内容发现、SPA 爬取和安全审计
+- **扫描配置**——将策略、速率、范围和模块配置整合到一个 YAML 文件中（\`--scanning-profile\`）
+- **多种输入格式**——支持 URL、OpenAPI/Swagger、Postman、Burp Suite、cURL 和 Nuclei JSONL
+- **浏览器爬虫**——基于 Chromium 的 Spitolas，支持 SPA、表单填写和 JavaScript 分析
+- **内容发现**——Deparos 自适应目录与文件枚举引擎，支持软 404 检测
+- **请求头注入**——自动模糊测试现有及合成请求头
+- **多会话认证**——支持命令行内联会话、会话文件和认证配置，涵盖登录流程、令牌提取及 IDOR/BOLA 测试
+- **JavaScript 扩展**——通过内置 JS 引擎编写自定义模块和钩子，支持会话感知的 HTTP API
+- **并发架构**——可配置工作池、主机级速率限制，以及内存/磁盘/Redis 混合队列
+- **HTML 报告**——生成独立 HTML 报告，包含可排序和筛选的 ag-grid 表格
 
-### Agentic Scan
+### 智能代理扫描
 
-- **Autonomous scanning (Autopilot)** — AI agent autonomously discovers endpoints, runs scans, and triages findings via a sandboxed terminal with command allowlisting
-- **Multi-phase pipeline (Pipeline)** — fixed 7-phase workflow (source-analysis → discover → plan → scan → triage → rescan → report) where AI agents handle strategy at checkpoints while native scan phases handle heavy lifting
-- **Targeted vulnerability swarm (Swarm)** — master agent analyzes inputs, selects scanner modules, generates custom JS attack extensions, executes scans, and triages results with batched execution for large input sets
-- **Query mode** — single-shot prompt execution for code review, endpoint discovery, and secret detection (not a scan — simple Q&A utility)
-- **Source-aware intelligence** — when \`--source\` is provided, agents analyze application source code to discover routes, understand auth flows, and identify vulnerability sinks before scanning
-- **Multiple AI backends** — Claude, Codex, Gemini, or custom ACP-compatible agents via CLI or REST API (with SSE streaming)
+- **自动驾驶扫描**——AI 代理通过受限终端自主发现端点、执行扫描并分析结果
+- **多阶段流水线**——固定的七阶段工作流：源码分析、发现、规划、扫描、分流、复扫和报告
+- **定向漏洞协同扫描**——主代理分析输入、选择扫描模块、生成 JS 攻击扩展，并批量执行和分析结果
+- **查询模式**——单次提示执行代码审查、端点发现和密钥检测；这是问答工具，不会启动扫描
+- **源码感知分析**——提供 \`--source\` 时，代理会先分析应用路由、认证流程和潜在漏洞点
+- **多种 AI 后端**——支持 Claude、Codex、Gemini，以及兼容 ACP 的自定义代理；可通过 CLI 或 REST API 调用并使用 SSE 流式输出
 
-### Platform
+### 平台
 
-- **API server mode** — REST API with Swagger UI, multi-format ingestion, transparent HTTP proxy, OpenAI-compatible agent endpoint`;
+- **API 服务模式**——提供 REST API、Swagger UI、多格式流量导入、透明 HTTP 代理和兼容 OpenAI 的代理接口`;
 
 function SchemeCard({ scheme, isSelected, onSelect }: { scheme: ColorScheme; isSelected: boolean; onSelect: () => void }) {
   const { colors: c } = scheme;
@@ -135,6 +135,16 @@ const TAB_ICONS: Record<string, typeof Settings> = {
   console: Monitor,
 };
 
+const TAB_LABELS: Record<string, string> = {
+  config: '配置',
+  projects: '项目',
+  theme: '主题',
+  about: '关于',
+  profile: '个人资料',
+  team: '团队',
+  console: '控制台',
+};
+
 export default function SettingsPage({ initialTab }: { initialTab?: string }) {
   const defaultTab = isStaticBuild ? 'config' : 'projects';
   const tabs = isStaticBuild ? STATIC_TABS : CLOUD_TABS;
@@ -190,8 +200,8 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
   const saveEdit = () => {
     if (editingKey) {
       updateConfig.mutate([{ key: editingKey, value: editValue }], {
-        onSuccess: () => toast('config updated', 'success'),
-        onError: () => toast('error updating config', 'error'),
+        onSuccess: () => toast('配置已更新', 'success'),
+        onError: () => toast('更新配置失败', 'error'),
       });
       setEditingKey(null);
     }
@@ -232,24 +242,24 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
     if (!newProjectName.trim()) return;
     createProjectMutation.mutate({ name: newProjectName.trim(), description: newProjectDesc.trim() || undefined }, {
       onSuccess: (project) => {
-        toast(`project "${project.name}" created`, 'success');
+        toast(`项目“${project.name}”已创建`, 'success');
         setNewProjectName('');
         setNewProjectDesc('');
         setShowCreateForm(false);
         setProject(project.uuid);
       },
-      onError: () => toast('error creating project', 'error'),
+      onError: () => toast('创建项目失败', 'error'),
     });
   };
 
   const handleDeleteProject = (uuid: string) => {
     deleteProjectMutation.mutate(uuid, {
       onSuccess: () => {
-        toast('project deleted', 'success');
+        toast('项目已删除', 'success');
         setConfirmDeleteUUID(null);
         if (projectUUID === uuid) setProject(null);
       },
-      onError: () => toast('error deleting project', 'error'),
+      onError: () => toast('删除项目失败', 'error'),
     });
   };
 
@@ -268,7 +278,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
     if (!email.trim()) return;
     try {
       await invite.mutateAsync({ email: email.trim() });
-      toast(`Invitation sent to ${email}`, 'success');
+      toast(`邀请已发送至 ${email}`, 'success');
       setEmail('');
     } catch (err) {
       toast(err instanceof Error ? err.message : 'Failed to invite', 'error');
@@ -279,7 +289,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
     if (!confirm(`Remove ${name} from the team?`)) return;
     try {
       await remove.mutateAsync(membershipId);
-      toast(`${name} removed`, 'success');
+      toast(`已移除成员 ${name}`, 'success');
     } catch (err) {
       toast(err instanceof Error ? err.message : 'Failed to remove', 'error');
     }
@@ -312,7 +322,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                 }}
               >
                 {Icon && <Icon className="w-3 h-3" />}
-                {tab.charAt(0).toUpperCase() + tab.slice(1)}
+                {TAB_LABELS[tab] ?? tab}
               </button>
             );
           })}
@@ -328,7 +338,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                 type="text"
                 value={configFilter}
                 onChange={(e) => setConfigFilter(e.target.value)}
-                placeholder="filter..."
+                placeholder="筛选..."
                 className="border text-xs px-2 py-0.5 w-40 focus:outline-none"
                 style={{ backgroundColor: 'var(--v-bg)', borderColor: 'var(--v-border)', color: 'var(--v-text)' }}
               />
@@ -390,7 +400,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                                 style={{ backgroundColor: 'var(--v-bg)', borderColor: 'color-mix(in srgb, var(--v-accent) 50%, transparent)', color: 'var(--v-text)' }}
                                 autoFocus
                               />
-                              <button onClick={saveEdit} className="px-1" style={{ color: 'var(--v-success)' }}>[ok]</button>
+                              <button onClick={saveEdit} className="px-1" style={{ color: 'var(--v-success)' }}>[确定]</button>
                               <button onClick={() => setEditingKey(null)} className="px-1" style={{ color: 'var(--v-error)' }}>[x]</button>
                             </div>
                           ) : (
@@ -425,7 +435,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                 );
               })}
               {configEntries.length === 0 && (
-                <div className="px-3 py-4 text-xs" style={{ color: 'var(--v-text-muted)' }}>no config entries</div>
+                <div className="px-3 py-4 text-xs" style={{ color: 'var(--v-text-muted)' }}>暂无配置项</div>
               )}
             </div>
           </div>
@@ -439,7 +449,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <User className="w-4 h-4" style={{ color: 'var(--v-secondary)' }} />
-                  <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>Profile</h2>
+                  <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>个人资料</h2>
                 </div>
                 {currentUser ? (
                   <div
@@ -447,37 +457,37 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                     style={{ borderColor: 'var(--v-border)', backgroundColor: 'var(--v-surface)' }}
                   >
                     <div className="flex items-baseline gap-2">
-                      <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>Name</span>
+                      <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>名称</span>
                       <span style={{ color: 'var(--v-text)' }}>{currentUser.name}</span>
                     </div>
                     <div className="flex items-baseline gap-2">
-                      <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>Email</span>
+                      <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>电子邮箱</span>
                       <span style={{ color: 'var(--v-text)' }}>{currentUser.email}</span>
                     </div>
                     <div className="flex items-baseline gap-2">
-                      <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>Role</span>
+                      <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>角色</span>
                       <span style={{ color: 'var(--v-text)' }}>{currentUser.role}</span>
                     </div>
                     {currentUser.organization && (
                       <div className="flex items-baseline gap-2">
-                        <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>Org</span>
+                        <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>组织</span>
                         <span style={{ color: 'var(--v-text)' }}>{currentUser.organization.name}</span>
                       </div>
                     )}
                     <div className="flex items-baseline gap-2">
-                      <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>Credits</span>
+                      <span className="font-bold uppercase" style={{ color: 'var(--v-text-muted)' }}>额度</span>
                       <span className="font-bold" style={{ color: 'var(--v-accent)' }}>{displayedCredits.toLocaleString()}</span>
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs" style={{ color: 'var(--v-text-muted)' }}>Not signed in</p>
+                  <p className="text-xs" style={{ color: 'var(--v-text-muted)' }}>未登录</p>
                 )}
               </div>
             )}
 
             <div className="flex items-center gap-2 mb-2">
               <FolderKanban className="w-4 h-4" style={{ color: 'var(--v-secondary)' }} />
-              <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>Projects</h2>
+              <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>项目</h2>
             </div>
             <div className="flex items-center justify-between gap-2">
               <span className="text-xs font-bold shrink-0" style={{ color: 'var(--v-text-muted)' }}>
@@ -490,7 +500,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                     type="text"
                     value={projectSearch}
                     onChange={(e) => setProjectSearch(e.target.value)}
-                    placeholder="search projects..."
+                    placeholder="搜索项目..."
                     className="bg-transparent text-xs outline-none w-40"
                     style={{ color: 'var(--v-text)' }}
                   />
@@ -512,7 +522,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                   value={newProjectName}
                   onChange={(e) => setNewProjectName(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleCreateProject()}
-                  placeholder="project name"
+                  placeholder="项目名称"
                   className="w-full border text-xs px-2 py-1 focus:outline-none"
                   style={{ backgroundColor: 'var(--v-bg)', borderColor: 'var(--v-border)', color: 'var(--v-text)' }}
                   autoFocus
@@ -522,7 +532,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                   value={newProjectDesc}
                   onChange={(e) => setNewProjectDesc(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleCreateProject()}
-                  placeholder="description (optional)"
+                  placeholder="描述（可选）"
                   className="w-full border text-xs px-2 py-1 focus:outline-none"
                   style={{ backgroundColor: 'var(--v-bg)', borderColor: 'var(--v-border)', color: 'var(--v-text)' }}
                 />
@@ -549,14 +559,14 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
             <div className="border overflow-hidden" style={{ borderColor: 'var(--v-border)', backgroundColor: 'var(--v-bg)' }}>
               <div className="grid grid-cols-[1fr_1.2fr_60px_200px_50px_50px_80px_100px] px-3 py-1.5 border-b text-[10px] font-bold uppercase"
                 style={{ borderColor: 'var(--v-border)', backgroundColor: 'var(--v-surface)', color: 'var(--v-text-muted)' }}>
-                <span>Name</span>
-                <span>Description</span>
-                <span className="text-right">Records</span>
-                <span className="text-right">Findings</span>
-                <span className="text-right">Scans</span>
-                <span className="text-right">Agents</span>
-                <span className="text-right">Created</span>
-                <span className="text-right">Actions</span>
+                <span>名称</span>
+                <span>描述</span>
+                <span className="text-right">记录数</span>
+                <span className="text-right">漏洞数</span>
+                <span className="text-right">扫描数</span>
+                <span className="text-right">代理数</span>
+                <span className="text-right">创建时间</span>
+                <span className="text-right">操作</span>
               </div>
 
               <div className="overflow-y-auto" style={{ maxHeight: 'calc(100vh - 320px)' }}>
@@ -590,7 +600,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
             <div className="flex items-center gap-2 mb-2">
               <Users className="w-4 h-4" style={{ color: 'var(--v-secondary)' }} />
               <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>
-                Team{currentUser?.organization ? ` — ${currentUser.organization.name}` : ''}
+                团队{currentUser?.organization ? ` — ${currentUser.organization.name}` : ''}
               </h2>
             </div>
 
@@ -601,7 +611,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 onKeyDown={(e) => e.key === 'Enter' && handleInvite()}
-                placeholder="email@example.com"
+                placeholder="邮箱地址"
                 className="flex-1 px-2 py-1 text-xs border outline-none"
                 style={{ backgroundColor: 'var(--v-bg)', borderColor: 'var(--v-border)', color: 'var(--v-text)' }}
               />
@@ -619,16 +629,16 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
               <table className="w-full text-xs">
                 <thead>
                   <tr style={{ backgroundColor: 'color-mix(in srgb, var(--v-surface) 50%, transparent)' }}>
-                    <th className="text-left px-3 py-2 font-bold" style={{ color: 'var(--v-text-muted)' }}>Name</th>
-                    <th className="text-left px-3 py-2 font-bold" style={{ color: 'var(--v-text-muted)' }}>Email</th>
-                    <th className="text-left px-3 py-2 font-bold" style={{ color: 'var(--v-text-muted)' }}>Role</th>
-                    <th className="text-left px-3 py-2 font-bold" style={{ color: 'var(--v-text-muted)' }}>Joined</th>
+                    <th className="text-left px-3 py-2 font-bold" style={{ color: 'var(--v-text-muted)' }}>名称</th>
+                    <th className="text-left px-3 py-2 font-bold" style={{ color: 'var(--v-text-muted)' }}>电子邮箱</th>
+                    <th className="text-left px-3 py-2 font-bold" style={{ color: 'var(--v-text-muted)' }}>角色</th>
+                    <th className="text-left px-3 py-2 font-bold" style={{ color: 'var(--v-text-muted)' }}>加入时间</th>
                     <th className="w-8"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {membersLoading && (
-                    <tr><td colSpan={5} className="px-3 py-4 text-center" style={{ color: 'var(--v-text-muted)' }}>Loading...</td></tr>
+                    <tr><td colSpan={5} className="px-3 py-4 text-center" style={{ color: 'var(--v-text-muted)' }}>加载中...</td></tr>
                   )}
                   {members?.map((m) => (
                     <tr key={m.id} className="border-t" style={{ borderColor: 'var(--v-border)' }}>
@@ -656,7 +666,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                             onClick={() => handleRemove(m.membership_id, m.name)}
                             className="transition-colors"
                             style={{ color: 'var(--v-error)' }}
-                            title="Remove member"
+                            title="移除成员"
                           >
                             <Trash2 className="w-3 h-3" />
                           </button>
@@ -665,7 +675,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                     </tr>
                   ))}
                   {!membersLoading && (!members || members.length === 0) && (
-                    <tr><td colSpan={5} className="px-3 py-4 text-center" style={{ color: 'var(--v-text-muted)' }}>No team members</td></tr>
+                    <tr><td colSpan={5} className="px-3 py-4 text-center" style={{ color: 'var(--v-text-muted)' }}>暂无团队成员</td></tr>
                   )}
                 </tbody>
               </table>
@@ -679,7 +689,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Monitor className="w-4 h-4" style={{ color: 'var(--v-secondary)' }} />
-              <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>Navigation Pages</h2>
+              <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>导航页面</h2>
             </div>
             <p className="text-xs mb-4" style={{ color: 'var(--v-text-muted)' }}>
               Toggle which pages appear in the navigation bar. Hidden pages are still accessible via direct URL.
@@ -736,7 +746,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
                   type="text"
                   value={filter}
                   onChange={e => setFilter(e.target.value)}
-                  placeholder="Search schemes..."
+                  placeholder="搜索配色方案..."
                   className="bg-transparent text-xs outline-none flex-1"
                   style={{ color: 'var(--v-text)' }}
                 />
@@ -780,7 +790,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
           <div>
             <div className="flex items-center gap-2 mb-4">
               <Info className="w-4 h-4" style={{ color: 'var(--v-secondary)' }} />
-              <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>About Vigolium</h2>
+              <h2 className="text-sm font-bold" style={{ color: 'var(--v-accent)' }}>关于 Vigolium</h2>
             </div>
             <div className="prose-v-settings overflow-auto max-h-[calc(100vh-200px)] text-justify px-4 py-3">
               <ReactMarkdown remarkPlugins={[remarkGfm]}
@@ -808,7 +818,7 @@ export default function SettingsPage({ initialTab }: { initialTab?: string }) {
               </ReactMarkdown>
             </div>
             <div className="mt-6 px-4 py-4 border" style={{ borderColor: 'var(--v-border)', backgroundColor: 'var(--v-surface)' }}>
-              <h3 className="text-xs font-bold uppercase tracking-wide mb-3" style={{ color: 'var(--v-accent)' }}>Official Resources</h3>
+              <h3 className="text-xs font-bold uppercase tracking-wide mb-3" style={{ color: 'var(--v-accent)' }}>官方资源</h3>
               <div className="flex items-center gap-3">
                 <a href="https://www.vigolium.com/" target="_blank" rel="noopener noreferrer"
                   className="text-xs font-bold px-3 py-1.5 border transition-colors hover:opacity-80"
@@ -846,9 +856,9 @@ function ProjectRow({ project, isCurrent, isDefault, isConfirmingDelete, onSelec
   const handleCopyUUID = async () => {
     try {
       await navigator.clipboard.writeText(project.uuid);
-      toast('project uuid copied', 'success');
+      toast('项目 UUID 已复制', 'success');
     } catch {
-      toast('failed to copy uuid', 'error');
+      toast('复制 UUID 失败', 'error');
     }
   };
   return (
@@ -865,7 +875,7 @@ function ProjectRow({ project, isCurrent, isDefault, isConfirmingDelete, onSelec
           <span className="font-medium break-words leading-tight" style={{ color: isCurrent ? 'var(--v-accent)' : 'var(--v-text)' }}>
             {project.name}
           </span>
-          {isDefault && <span className="text-[9px] px-1 border ml-1 inline-block" style={{ borderColor: 'var(--v-border)', color: 'var(--v-text-muted)' }}>default</span>}
+          {isDefault && <span className="text-[9px] px-1 border ml-1 inline-block" style={{ borderColor: 'var(--v-border)', color: 'var(--v-text-muted)' }}>默认</span>}
           <button
             onClick={handleCopyUUID}
             title={`Copy project UUID: ${project.uuid}`}
@@ -901,11 +911,11 @@ function ProjectRow({ project, isCurrent, isDefault, isConfirmingDelete, onSelec
         {!isDefault && (
           isConfirmingDelete ? (
             <div className="flex items-center gap-0.5">
-              <button onClick={onConfirmDelete} className="text-[10px] font-bold px-1" style={{ color: 'var(--v-error)' }}>[yes]</button>
-              <button onClick={onCancelDelete} className="text-[10px] font-bold px-1" style={{ color: 'var(--v-text-muted)' }}>[no]</button>
+              <button onClick={onConfirmDelete} className="text-[10px] font-bold px-1" style={{ color: 'var(--v-error)' }}>[是]</button>
+              <button onClick={onCancelDelete} className="text-[10px] font-bold px-1" style={{ color: 'var(--v-text-muted)' }}>[否]</button>
             </div>
           ) : (
-            <button onClick={onAskDelete} className="text-[10px] font-bold px-1" style={{ color: 'var(--v-text-muted)' }}>[del]</button>
+            <button onClick={onAskDelete} className="text-[10px] font-bold px-1" style={{ color: 'var(--v-text-muted)' }}>[删除]</button>
           )
         )}
       </div>

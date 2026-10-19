@@ -12,7 +12,7 @@ import { FINDING_STATUSES } from '@/api/types';
 
 import { registerAgGrid } from '@/lib/ag-grid-register';
 import { formatDate } from '@/lib/formatters';
-import { SEVERITY_COLORS, CONFIDENCE_COLORS, MODULE_TYPE_COLORS, AG_GRID_THEME } from './theme';
+import { SEVERITY_COLORS, CONFIDENCE_COLORS, MODULE_TYPE_COLORS, AG_GRID_THEME, AG_GRID_LOCALE_ZH_CN } from './theme';
 import PageShell from './PageShell';
 import FindingDetailPanel from './FindingDetailPanel';
 import Dropdown from './Dropdown';
@@ -66,12 +66,12 @@ function GroupedByHostView({
     <div className="overflow-y-auto flex-1">
       {/* Column headers */}
       <div className="flex items-center gap-2 px-3 pl-7 py-1 border-b border-[#2e2b26] text-[#918175] text-xs font-bold sticky top-0 bg-[#1c1b19] z-10">
-        <span className="w-16 shrink-0">SEV</span>
-        <span className="w-16 shrink-0">CONF</span>
-        <span className="w-40 shrink-0">MODULE</span>
-        <span className="flex-1">DESCRIPTION</span>
-        <span className="w-52 shrink-0 text-right">MATCHED_AT</span>
-        <span className="w-28 shrink-0 text-right">TIME</span>
+        <span className="w-16 shrink-0">严重性</span>
+        <span className="w-16 shrink-0">置信度</span>
+        <span className="w-40 shrink-0">模块</span>
+        <span className="flex-1">描述</span>
+        <span className="w-52 shrink-0 text-right">匹配位置</span>
+        <span className="w-28 shrink-0 text-right">时间</span>
       </div>
       {grouped.map(([host, items]) => (
         <div key={host}>
@@ -114,7 +114,7 @@ function GroupedByHostView({
         </div>
       ))}
       {grouped.length === 0 && (
-        <div className="p-3 text-xs text-[#403d38] text-center">no findings</div>
+        <div className="p-3 text-xs text-[#403d38] text-center">暂无漏洞发现</div>
       )}
     </div>
   );
@@ -223,9 +223,9 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
     const succeeded = results.filter((r) => r.status === 'fulfilled').length;
     const failed = results.length - succeeded;
     if (failed === 0) {
-      toast(`Deleted ${succeeded} finding(s)`, 'success');
+      toast(`已删除 ${succeeded} 个漏洞`, 'success');
     } else {
-      toast(`Deleted ${succeeded}, failed ${failed}`, 'error');
+      toast(`删除成功 ${succeeded} 项，失败 ${failed} 项`, 'error');
     }
     setSelectedRows([]);
     gridRef.current?.api?.deselectAll();
@@ -344,8 +344,8 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
         <div className={`border border-[#2e2b26] bg-[#1c1b19] overflow-hidden flex flex-col ${selectedFindingId !== null ? 'w-1/2' : 'w-full'} transition-all`}>
           <div className="px-3 py-1.5 border-b border-[#2e2b26] flex items-center justify-between flex-wrap gap-2">
             <div className="flex items-center gap-1.5">
-              <span className="text-[#7fd962] text-xs font-bold">FINDINGS</span>
-              <button onClick={() => refetch()} className="text-[#918175] hover:text-[#7fd962] transition-colors" title="Refresh">
+              <span className="text-[#7fd962] text-xs font-bold">漏洞发现</span>
+              <button onClick={() => refetch()} className="text-[#918175] hover:text-[#7fd962] transition-colors" title="刷新">
                 <RefreshCw className={`w-3 h-3 ${isFetching ? 'animate-spin' : ''}`} />
               </button>
               {/* View tabs */}
@@ -357,7 +357,7 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
                       ? 'text-[#7fd962] bg-[#7fd962]/10'
                       : 'text-[#918175] hover:text-[#fce8c3]'
                   }`}
-                  title="Table view"
+                  title="表格视图"
                 >
                   <List className="w-3 h-3" />
                   Table
@@ -369,7 +369,7 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
                       ? 'text-[#7fd962] bg-[#7fd962]/10'
                       : 'text-[#918175] hover:text-[#fce8c3]'
                   }`}
-                  title="Group by hostname"
+                  title="按主机名分组"
                 >
                   <Layers className="w-3 h-3" />
                   By Host
@@ -380,7 +380,7 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
               <button
                 onClick={clearFilters}
                 disabled={!hasActiveFilters}
-                title="Clear all filters"
+                title="清除所有筛选条件"
                 className={`flex items-center gap-1 border text-xs px-2 py-0.5 transition-colors ${
                   hasActiveFilters
                     ? 'border-[#ef2f27]/50 text-[#ef2f27] bg-[#1c1b19] hover:bg-[#ef2f27]/10'
@@ -394,56 +394,66 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
                 value={severityFilter}
                 icon={<Shield className="w-3 h-3" />}
                 options={[
-                  { value: '', label: 'sev:all' },
-                  { value: 'critical', label: 'critical' },
-                  { value: 'high', label: 'high' },
-                  { value: 'medium', label: 'medium' },
-                  { value: 'low', label: 'low' },
-                  { value: 'info', label: 'info' },
+                  { value: '', label: '严重性：全部' },
+                  { value: 'critical', label: '严重' },
+                  { value: 'high', label: '高危' },
+                  { value: 'medium', label: '中危' },
+                  { value: 'low', label: '低危' },
+                  { value: 'info', label: '信息' },
                 ]}
                 onChange={(v) => { setSeverityFilter(v); resetOffset(); }}
               />
               <div className="flex items-center border border-[#2e2b26] bg-[#1c1b19] focus-within:border-[#7fd962]/50">
                 <Globe className="w-3 h-3 text-[#918175] ml-1.5 shrink-0" />
-                <input type="text" value={domainFilter} onChange={(e) => { setDomainFilter(e.target.value); resetOffset(); }} placeholder="domain..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-28 focus:outline-none" />
+                <input type="text" value={domainFilter} onChange={(e) => { setDomainFilter(e.target.value); resetOffset(); }} placeholder="域名..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-28 focus:outline-none" />
               </div>
               <div className="flex items-center border border-[#2e2b26] bg-[#1c1b19] focus-within:border-[#7fd962]/50">
                 <Box className="w-3 h-3 text-[#918175] ml-1.5 shrink-0" />
-                <input type="text" value={moduleFilter} onChange={(e) => { setModuleFilter(e.target.value); resetOffset(); }} placeholder="module..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-28 focus:outline-none" />
+                <input type="text" value={moduleFilter} onChange={(e) => { setModuleFilter(e.target.value); resetOffset(); }} placeholder="模块..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-28 focus:outline-none" />
               </div>
               <Dropdown
                 value={moduleTypeFilter}
                 options={[
-                  { value: '', label: 'type:all' },
-                  { value: 'active', label: 'active' },
-                  { value: 'passive', label: 'passive' },
+                  { value: '', label: '类型：全部' },
+                  { value: 'active', label: '主动' },
+                  { value: 'passive', label: '被动' },
                 ]}
                 onChange={(v) => { setModuleTypeFilter(v); resetOffset(); }}
               />
               <Dropdown
                 value={findingSourceFilter}
                 options={[
-                  { value: '', label: 'source:all' },
-                  { value: 'audit', label: 'audit' },
-                  { value: 'spa', label: 'spa' },
-                  { value: 'agent', label: 'agent' },
-                  { value: 'oast', label: 'oast' },
-                  { value: 'source-tools', label: 'source-tools' },
-                  { value: 'extension', label: 'extension' },
+                  { value: '', label: '来源：全部' },
+                  { value: 'audit', label: '审计' },
+                  { value: 'spa', label: 'SPA' },
+                  { value: 'agent', label: '代理' },
+                  { value: 'oast', label: 'OAST' },
+                  { value: 'source-tools', label: '源码工具' },
+                  { value: 'extension', label: '扩展' },
                 ]}
                 onChange={(v) => { setFindingSourceFilter(v); resetOffset(); }}
               />
               <Dropdown
                 value={statusFilter}
                 options={[
-                  { value: '', label: 'status:all' },
-                  ...FINDING_STATUSES.map((s) => ({ value: s, label: s })),
+                  { value: '', label: '状态：全部' },
+                  ...FINDING_STATUSES.map((s) => ({
+                    value: s,
+                    label: ({
+                      draft: '草稿',
+                      triaged: '已分流',
+                      confirmed: '已确认',
+                      false_positive: '误报',
+                      accepted_risk: '接受风险',
+                      fixed: '已修复',
+                    }[s]),
+                  })),
                 ]}
                 onChange={(v) => { setStatusFilter(v); resetOffset(); }}
               />
               <div className="flex items-center border border-[#2e2b26] bg-[#1c1b19] focus-within:border-[#7fd962]/50">
                 <Search className="w-3 h-3 text-[#918175] ml-1.5 shrink-0" />
-                <input type="text" value={searchInput} onChange={(e) => { setSearchInput(e.target.value); resetOffset(); }} placeholder="search..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-36 focus:outline-none" />
+                <input type="text" value={searchInput} onChange={(e) => { setSearchInput(e.target.value); resetOffset(); }} placeholder="搜索..." className="bg-transparent text-[#fce8c3] text-xs px-1.5 py-0.5 w-36 focus:outline-none" />
               </div>
               {viewTab === 'table' && (
                 <ColumnChooser columns={toggleableColumns} hiddenColumns={hiddenColumns} onChange={setHiddenColumns} />
@@ -470,6 +480,7 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
             <>
               <div className={`${AG_GRID_THEME} w-full flex-1`}>
                 <AgGridReact<Finding>
+                  localeText={AG_GRID_LOCALE_ZH_CN}
                   ref={gridRef}
                   rowData={data?.data || []}
                   columnDefs={effectiveColumnDefs}
@@ -480,7 +491,7 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
                   onRowClicked={onRowClicked}
                   rowSelection={{ mode: 'multiRow', headerCheckbox: true, checkboxes: true, enableClickSelection: false }}
                   onSelectionChanged={onSelectionChanged}
-                  overlayNoRowsTemplate='<span style="color:#403d38">no findings</span>'
+                  overlayNoRowsTemplate='<span style="color:#403d38">暂无漏洞发现</span>'
                 />
               </div>
 
@@ -503,7 +514,7 @@ export default function FindingsPage({ initialId }: { initialId?: number | null 
           {viewTab === 'by-host' && (
             <>
               {isLoading ? (
-                <div className="p-3 text-xs text-[#918175]">loading...</div>
+                <div className="p-3 text-xs text-[#918175]">加载中...</div>
               ) : (
                 <GroupedByHostView
                   findings={data?.data || []}

@@ -12,4 +12,5 @@ export {
   MODULE_TYPE_COLORS,
   CHART_COLORS,
   AG_GRID_THEME,
+  AG_GRID_LOCALE_ZH_CN,
 } from '@/lib/domainPalette';

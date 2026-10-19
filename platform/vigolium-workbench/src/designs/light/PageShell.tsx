@@ -20,13 +20,13 @@ export default function PageShell({ children }: { children: ReactNode }) {
         {children}
       </main>
       <footer className="px-4 py-2 flex items-center justify-center gap-3 text-[10px] border-t" style={{ borderColor: 'var(--v-border)', color: 'var(--v-text-muted)' }}>
-        <a href="https://console.vigolium.com/" target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1" style={{ color: 'var(--v-accent)' }}><Cloud className="w-3 h-3" />vigolium cloud</a>
+        <a href="https://console.vigolium.com/" target="_blank" rel="noopener noreferrer" className="hover:underline flex items-center gap-1" style={{ color: 'var(--v-accent)' }}><Cloud className="w-3 h-3" />Vigolium 云控制台</a>
         <span>·</span>
-        <a href="https://www.vigolium.com/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--v-accent)' }}>website</a>
+        <a href="https://www.vigolium.com/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--v-accent)' }}>官网</a>
         <span>·</span>
-        <a href="https://docs.vigolium.com/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--v-accent)' }}>docs</a>
+        <a href="https://docs.vigolium.com/" target="_blank" rel="noopener noreferrer" className="hover:underline" style={{ color: 'var(--v-accent)' }}>文档</a>
         <span>·</span>
-        <a href="mailto:contact@vigolium.com" className="hover:underline" style={{ color: 'var(--v-accent)' }}>contact us</a>
+        <a href="mailto:contact@vigolium.com" className="hover:underline" style={{ color: 'var(--v-accent)' }}>联系我们</a>
       </footer>
     </Layout>
   );
